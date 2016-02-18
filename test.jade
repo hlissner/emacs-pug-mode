@@ -1,0 +1,74 @@
+doctype html
+html(lang="en", class = ['classOne', 'classTwo'].join(','))
+  //- consult http://jade-lang.com for a full language reference
+  head
+    title My page
+  body.bp
+    #container
+      #header
+        extends .test
+        h1.page-title My.awesome. page #is awesome#
+      #nav
+        ul#nav_list something sweet
+          li
+      #content
+        p.
+          This should be a block of plain text
+          that can go on for as many lines as needed.
+
+          Even if it's interrupted with blank lines.
+            <!-- test -->
+
+        p
+          | More plain text goodness, but this one
+          | requires a pipe to denote plain-textness
+
+        // here is a real comment
+        -// here is another real comment
+        //- here is a THIRD real comment syntax (what?) (this one is documented)
+        a(href = 'http://www.google.com') http://www.google.com
+        - if (youAreUsingJade)
+          p You are amazing
+        - else
+          p Get on it!
+          form
+            input(type = "text", name='user[name]', readonly = true, disabled)
+        div#single-quote.example
+          = 'this single quote should highlight as a string'
+          = 'this one' + "and this should too"
+          span= 'another' + "quote example"
+          span this one shouldn't higlight strings or... .other #things if else
+          | this one shouldn't highlight strings, and the same goes for .keywords #ok ?
+        div#paren.content.example(style = 'float: left;') Content .here #should be plain if for
+        +helpMe("if this is .bolded #that's bad, we want a string","a second arg or else");
+        //- +mixIn('do not highlight mixins in comment blocks')
+        div.examples#javascript
+          - var a = 1;
+          - var helperFunction = function (a) { return (a === 1 ? 'singular' : 'plural'); };
+          span= someArray.join(', ')
+          span= a.toString() + helperFunction(a)
+          span#id.class(style = 'margin-bottom: 0;')= "some_js_expression".split('_').join(' ')
+          include:markdown article.md
+          include test.md
+      #footer
+        #copywrite-text= locals
+
+mixin article(title)
+  .article
+    .article-wrapper
+      h1= title
+      if block
+        block
+      else
+        p No content provided
+
++article('Hello world')
+
++article('Hello world')
+  p This is my
+  p Amazing article
+
+h1= title
+  p Written with love by #{author}
+  p This will be safe: #{theGreat}
+
