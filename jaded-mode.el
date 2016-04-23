@@ -382,8 +382,7 @@ character of the next line."
            (loop for opener in `(,(concat "^ *\\([\\.#+]\\|" jaded-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
                                  "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
                                  "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
-                                 ,jaded-control-re
-                                 )
+                                 ,jaded-control-re)
                  if (looking-at opener) return t
                  finally return nil))))
 
@@ -394,7 +393,8 @@ character of the next line."
     (if (bobp) 0
       (jaded-forward-through-whitespace t)
       (+ (current-indentation)
-         (if (funcall jaded-indent-function) tab-width
+         (if (funcall jaded-indent-function)
+             tab-width
            0)))))
 
 (defun jaded-indent-region (start end)
