@@ -1,13 +1,13 @@
-# Jaded-mode
+# pug-mode
 
 > This is a WIP. Use at your own risk! Contributions are welcome!
 
-`jaded-mode` offers Emacs support for [Jade](http://jade-lang.com/). Unlike `jade-mode`,
+`pug-mode` offers Emacs support for [Pug](http://jade-lang.com/). Unlike `jade-mode`,
 it is based off of [slim-mode](https://github.com/slim-template/emacs-slim).
 
 ## Why not use jade-mode?
 
-I created jaded-mode because `jade-mode` (based on `sws-mode`) is incomplete in some
+I created pug-mode because `jade-mode` (based on `sws-mode`) is incomplete in some
 annoying ways (to me). For example, it has poor/no fontification of plain-text, filter
 blocks, or mixin definitions/invokations; I was also unhappy with its indentation
 strategies and there wasn't enough time to grok and fix those issues.
