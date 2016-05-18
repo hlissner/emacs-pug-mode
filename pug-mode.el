@@ -495,7 +495,7 @@ the current line."
   (mapconcat 'identity (make-list tab-width " ") ""))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.jade\\'" . pug-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(jade\\|pug\\)\\'" . pug-mode))
 
 ;; Setup/Activation
 (provide 'pug-mode)
