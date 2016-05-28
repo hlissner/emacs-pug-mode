@@ -89,11 +89,14 @@ if the next line could be nested within this line.")
 
 ;; Helper for nested block (comment, embedded, text)
 (defun pug-nested-re (re)
-  (concat "^\\( *\\)" re "\n\\(\\(?:\\1" (make-string tab-width ? ) ".*\\| *\\)\n\\)*"))
+  (concat "^\\( *\\)" re "\\(\\(\n\\(?:\\1 +[^\n]*\\)?\\)*\\)"))
 
 (defconst pug-font-lock-keywords
-  `(;; comment block
-    (,(pug-nested-re "//")
+  `(;; plain text block
+    (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
+     3 font-lock-string-face)
+    ;; comment block
+    (,(pug-nested-re "-?//-?")
      0 font-lock-comment-face)
     ;; comment line
     ("^ *\\(-//\\|//-?\\).*"
@@ -104,9 +107,6 @@ if the next line could be nested within this line.")
     ;; filters
     (,(pug-nested-re "\\(:[a-z0-9_]+\\)")
      (0 font-lock-preprocessor-face prepend))
-    ;; text block
-    ;; (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
-    ;;  2 font-lock-string-face)
 
     (,pug-control-re
      2 font-lock-keyword-face append)
