@@ -180,12 +180,12 @@ if the next line could be nested within this line.")
     (or (/= old-beg font-lock-beg)
         (/= old-end font-lock-end))))
 
-(defvar jade-tag-declaration-char-re "[-a-zA-Z0-9_.#+]"
+(defvar pug-tag-declaration-char-re "[-a-zA-Z0-9_.#+]"
   "Regexp used to match a character in a tag declaration")
 
-(defun jade-goto-end-of-tag ()
+(defun pug-goto-end-of-tag ()
   "Skip ahead over whitespace, tag characters (defined in
-`jade-tag-declaration-char-re'), and paren blocks (using
+`pug-tag-declaration-char-re'), and paren blocks (using
 `forward-sexp') to put point at the end of a full tag declaration (but
 before its content). Use when point is inside or to the left of a tag
 declaration"
@@ -195,7 +195,7 @@ declaration"
   (while (looking-at "[ \t]")
     (forward-char 1))
 
-  (while (looking-at jade-tag-declaration-char-re)
+  (while (looking-at pug-tag-declaration-char-re)
     (forward-char 1))
   (if (looking-at "(")
       (forward-sexp 1)))
