@@ -1,27 +1,36 @@
-;;; pug-mode.el --- Major mode for jade template files
+;;; pug-mode.el --- Major mode for jade/pug template files
 ;;
 ;; Copyright (c) 2007, 2008 Nathan Weizenbaum
 ;; Copyright (c) 2009-2013 Daniel Mendler
 ;; Copyright (c) 2012-2014 Bozhidar Batsov
 ;; Copyright (c) 2016 Henrik Lissner
 ;;
+;; Author: Nathan Weizenbaum
+;; Author: Daniel Mendler
+;; Author: Bozhidar Batsov
 ;; Author: Henrik Lissner
-;; Inspired by: http://github.com/slim-template/emacs-slim
-;; URL: http://github.com/hlissner/pug-mode
-;; Version: 1.0
-;; Keywords: markup, language, jade
+;; Maintainer: Henrik Lissner <henrik@lissner.net>
+;; Created: February 18, 2016
+;; Modified: May 28, 2016
+;; Version: 1.0.1
+;; Homepage: https://github.com/hlissner/pug-mode
+;; Keywords: markup, language, jade pug
+;; Package-Requires: ((cl-lib "0.5"))
+;;
+;; This file is not part of GNU Emacs.
 ;;
 ;;; Commentary:
 ;;
+;; Inspired by: http://github.com/slim-template/emacs-slim
 ;;
+;; TODO
 ;;
 ;;; Code:
 
 (eval-when-compile
   (defvar font-lock-beg)
   (defvar font-lock-end)
-  (require 'cl))
-(require 'js)
+  (require 'cl-lib))
 
 ;; User definable variables
 
