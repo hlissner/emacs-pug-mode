@@ -17,15 +17,32 @@ html(lang="en", class = ['classOne', 'classTwo'].join(','))
           that can go on for as many lines as needed.
 
           Even if it's interrupted with blank lines.
-            <!-- test -->
+          <!-- test -->
 
         p
           | More plain text goodness, but this one
           | requires a pipe to denote plain-textness
 
+        p.
+          Hello world how are you
+          doing today
+
+        :markdown
+          Filters should work too!
+
         // here is a real comment
         -// here is another real comment
         //- here is a THIRD real comment syntax (what?) (this one is documented)
+
+        //
+          This is a block comment
+          that might go on for multiple
+          lines. asd
+        //-
+          asd
+        -//
+          Another one
+
         a(href = 'http://www.google.com') http://www.google.com
         - if (youAreUsingJade)
           p You are amazing
