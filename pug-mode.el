@@ -21,9 +21,8 @@
 ;;
 ;;; Commentary:
 ;;
-;; Inspired by: http://github.com/slim-template/emacs-slim
-;;
-;; TODO
+;; `pug-mode' offers Emacs support for Pug (http://jade-lang.com/) based off of
+;; slim-mode.
 ;;
 ;;; Code:
 
@@ -33,7 +32,6 @@
   (require 'cl-lib))
 
 ;; User definable variables
-
 (defgroup pug nil
   "Support for the Pug template language."
   :group 'languages
@@ -45,43 +43,40 @@
   :group 'pug)
 
 (defcustom pug-backspace-backdents-nesting t
-  "Non-nil to have `pug-electric-backspace' re-indent all code
-nested beneath the backspaced line be re-indented along with the
-line itself."
+  "Non-nil to have `pug-electric-backspace' re-indent all code nested beneath
+the backspaced line be re-indented along with the line itself."
   :type 'boolean
   :group 'pug)
 
 (defvar pug-indent-function 'pug-indent-p
-  "This function should look at the current line and return true
-if the next line could be nested within this line.")
-
-
-;; Font lock
+  "This function should look at the current line and return true if the next
+line could be nested within this line.")
 
 (defconst pug-tags-re
   (concat "^ *\\("
           (regexp-opt
            '("a" "abbr" "acronym" "address" "applet" "area" "article" "aside"
-             "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body"
-             "br" "button" "canvas" "caption" "center" "cite" "code" "col"
-             "colgroup" "command" "datalist" "dd" "del" "details" "dialog" "dfn"
-             "dir" "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
-             "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6"
-             "head" "header" "hgroup" "hr" "html" "i"
-             "iframe" "img" "input" "ins" "keygen" "kbd" "label" "legend" "li" "link"
-             "map" "mark" "menu" "meta" "meter" "nav" "noframes" "noscript" "object"
-             "ol" "optgroup" "option" "output" "p" "param" "pre" "progress" "q" "rp"
-             "rt" "ruby" "s" "samp" "script" "section" "select" "small" "source" "span"
-             "strike" "strong" "style" "sub" "sup" "table" "tbody" "td" "textarea" "tfoot"
-             "th" "thead" "time" "title" "tr" "tt" "u" "ul" "var" "video" "xmp") 'words)
+             "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body" "br"
+             "button" "canvas" "caption" "center" "cite" "code" "col" "colgroup"
+             "command" "datalist" "dd" "del" "details" "dialog" "dfn" "dir"
+             "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
+             "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6" "head"
+             "header" "hgroup" "hr" "html" "i" "iframe" "img" "input" "ins"
+             "keygen" "kbd" "label" "legend" "li" "link" "map" "mark" "menu"
+             "meta" "meter" "nav" "noframes" "noscript" "object" "ol" "optgroup"
+             "option" "output" "p" "param" "pre" "progress" "q" "rp" "rt" "ruby"
+             "s" "samp" "script" "section" "select" "small" "source" "span"
+             "strike" "strong" "style" "sub" "sup" "table" "tbody" "td"
+             "textarea" "tfoot" "th" "thead" "time" "title" "tr" "tt" "u" "ul"
+             "var" "video" "xmp") 'words)
           "\\)")
   "Regex of all html4/5 tags.")
 
 (defconst pug-selfclosing-tags-re
   (concat "^ *"
           (regexp-opt
-           '("meta" "title" "img" "area" "base" "br" "col" "command" "embed" "hr" "input"
-             "link" "param" "source" "track" "wbr") t)))
+           '("meta" "title" "img" "area" "base" "br" "col" "command" "embed"
+             "hr" "input" "link" "param" "source" "track" "wbr") t)))
 
 (defconst pug-keywords-re
   (concat "^ *\\(?:- \\)?" (regexp-opt '("extends" "block") t)))
@@ -89,17 +84,28 @@ if the next line could be nested within this line.")
 (defconst pug-control-re
   (concat "^ *\\(- \\)?\\("
           (regexp-opt
-           '("if" "unless" "while" "until" "else" "for"
-             "begin" "elsif" "when" "default" "case" "var'"
+           '("if" "unless" "while" "until" "else" "for" "begin" "elsif" "when"
+             "default" "case" "var'"
 
              "extends" "block" "mixin"
              ) 'words)
           "\\)"))
 
-;; Helper for nested block (comment, embedded, text)
+(defconst pug-embedded-re "^ *:[a-z0-9_-]+"
+  "Regexp matching filter and embedded elements.")
+
+(defconst pug-comment-re "^ *-?//-?"
+  "Regexp matching comment lines.")
+
+(defconst pug-tag-declaration-char-re "[-a-zA-Z0-9_.#+]"
+  "Regexp used to match a character in a tag declaration")
+
+
+;; Helper for nested blocks (comment, embedded, text)
 (defun pug-nested-re (re)
   (concat "^\\( *\\)" re "\\(\\(\n\\(?:\\1 +[^\n]*\\)?\\)*\\)"))
 
+;; Font lock
 (defconst pug-font-lock-keywords
   `(;; plain text block
     (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
@@ -167,11 +173,7 @@ if the next line could be nested within this line.")
      1 font-lock-preprocessor-face)
     ))
 
-(defconst pug-embedded-re "^ *:[a-z0-9_-]+")
-(defconst pug-plain-re "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.")
-(defconst pug-comment-re "^ *-?//-?")
-
-(defun* pug-extend-region ()
+(cl-defun pug-extend-region ()
   "Extend the font-lock region to encompass embedded engines and comments."
   (let ((old-beg font-lock-beg)
         (old-end font-lock-end))
@@ -188,9 +190,6 @@ if the next line could be nested within this line.")
       (setq font-lock-end (max font-lock-end (point))))
     (or (/= old-beg font-lock-beg)
         (/= old-end font-lock-end))))
-
-(defvar pug-tag-declaration-char-re "[-a-zA-Z0-9_.#+]"
-  "Regexp used to match a character in a tag declaration")
 
 (defun pug-goto-end-of-tag ()
   "Skip ahead over whitespace, tag characters (defined in
@@ -250,14 +249,13 @@ declaration"
   (setq font-lock-defaults '((pug-font-lock-keywords) nil t)))
 
 ;; Useful functions
-
 (defun pug-comment-block ()
   "Comment the current block of Pug code."
   (interactive)
   (save-excursion
     (let ((indent (current-indentation)))
       (back-to-indentation)
-      (insert "/")
+      (insert "//")
       (newline)
       (indent-to indent)
       (beginning-of-line)
@@ -277,10 +275,9 @@ declaration"
     (pug-reindent-region-by (- tab-width))))
 
 ;; Navigation
-
 (defun pug-forward-through-whitespace (&optional backward)
-  "Move the point forward at least one line, until it reaches
-either the end of the buffer or a line with no whitespace.
+  "Move the point forward at least one line, until it reaches either the end of
+the buffer or a line with no whitespace.
 
 If `backward' is non-nil, move the point backward instead."
   (let ((arg (if backward -1 1))
@@ -290,21 +287,19 @@ If `backward' is non-nil, move the point backward instead."
                      (looking-at "^[ \t]*$")))))
 
 (defun pug-at-indent-p ()
-  "Returns whether or not the point is at the first
-non-whitespace character in a line or whitespace preceding that
-character."
+  "Returns whether or not the point is at the first non-whitespace character in
+a line or whitespace preceding that character."
   (let ((opoint (point)))
     (save-excursion
       (back-to-indentation)
       (>= (point) opoint))))
 
 (defun pug-forward-sexp (&optional arg)
-  "Move forward across one nested expression.
-With `arg', do it that many times.  Negative arg -N means move
-backward across N balanced expressions.
+  "Move forward across one nested expression. With `arg', do it that many times.
+Negative arg -N means move backward across N balanced expressions.
 
-A sexp in Pug is defined as a line of Pug code as well as any
-lines nested beneath it."
+A sexp in Pug is defined as a line of Pug code as well as any lines nested
+beneath it."
   (interactive "p")
   (or arg (setq arg 1))
   (if (and (< arg 0) (not (pug-at-indent-p)))
@@ -319,18 +314,16 @@ lines nested beneath it."
         (setq arg (+ arg (if (> arg 0) -1 1)))))))
 
 (defun pug-backward-sexp (&optional arg)
-  "Move backward across one nested expression.
-With ARG, do it that many times.  Negative arg -N means move
-forward across N balanced expressions.
+  "Move backward across one nested expression. With ARG, do it that many times.
+Negative arg -N means move forward across N balanced expressions.
 
-A sexp in Pug is defined as a line of Pug code as well as any
-lines nested beneath it."
+A sexp in Pug is defined as a line of Pug code as well as any lines nested
+beneath it."
   (interactive "p")
   (pug-forward-sexp (if arg (- arg) -1)))
 
 (defun pug-up-list (&optional arg)
-  "Move out of one level of nesting.
-With ARG, do this that many times."
+  "Move out of one level of nesting. With ARG, do this that many times."
   (interactive "p")
   (or arg (setq arg 1))
   (while (> arg 0)
@@ -342,8 +335,7 @@ With ARG, do this that many times."
   (back-to-indentation))
 
 (defun pug-down-list (&optional arg)
-  "Move down one level of nesting.
-With ARG, do this that many times."
+  "Move down one level of nesting. With ARG, do this that many times."
   (interactive "p")
   (or arg (setq arg 1))
   (while (> arg 0)
@@ -362,9 +354,8 @@ With ARG, do this that many times."
     (mark-sexp)))
 
 (defun pug-mark-sexp-but-not-next-line ()
-  "Marks the next Pug block, but puts the mark at the end of the
-last line of the sexp rather than the first non-whitespace
-character of the next line."
+  "Marks the next Pug block, but puts the mark at the end of the last line of
+the sexp rather than the first non-whitespace character of the next line."
   (pug-mark-sexp)
   (let ((pos-of-end-of-line (save-excursion
                               (goto-char (mark))
@@ -379,9 +370,9 @@ character of the next line."
          (point))))))
 
 ;; Indentation and electric keys
-
 (defun pug-indent-p ()
   "Returns true if the current line can have lines nested beneath it."
+  ;; FIXME Optimize
   (or (looking-at-p pug-comment-re)
       (looking-at-p pug-embedded-re)
       (and (save-excursion
@@ -407,13 +398,12 @@ character of the next line."
            0)))))
 
 (defun pug-indent-region (start end)
-  "Indent each nonblank line in the region.
-This is done by indenting the first line based on
-`pug-compute-indentation' and preserving the relative
-indentation of the rest of the region.
+  "Indent each nonblank line in the region. This is done by indenting the first
+line based on `pug-compute-indentation' and preserving the relative indentation
+of the rest of the region.
 
-If this command is used multiple times in a row, it will cycle
-between possible indentations."
+If this command is used multiple times in a row, it will cycle between possible
+indentations."
   (save-excursion
     (goto-char end)
     (setq end (point-marker))
@@ -440,11 +430,10 @@ between possible indentations."
     (move-marker end nil)))
 
 (defun pug-indent-line ()
-  "Indent the current line.
-The first time this command is used, the line will be indented to the
-maximum sensible indentation.  Each immediately subsequent usage will
-back-dent the line by `tab-width' spaces.  On reaching column
-0, it will cycle back to the maximum sensible indentation."
+  "Indent the current line. The first time this command is used, the line will
+be indented to the maximum sensible indentation. Each immediately subsequent
+usage will back-dent the line by `tab-width' spaces. On reaching column 0, it
+will cycle back to the maximum sensible indentation."
   (interactive "*")
   (let ((ci (current-indentation))
         (cc (current-column))
@@ -459,9 +448,9 @@ back-dent the line by `tab-width' spaces.  On reaching column
           (forward-to-indentation 0))))
 
 (defun pug-reindent-region-by (n)
-  "Add N spaces to the beginning of each line in the region.
-If N is negative, will remove the spaces instead.  Assumes all
-lines in the region have indentation >= that of the first line."
+  "Add N spaces to the beginning of each line in the region. If N is negative,
+will remove the spaces instead. Assumes all lines in the region have indentation
+>= that of the first line."
   (let ((ci (current-indentation))
         (bound (mark)))
     (save-excursion
@@ -469,13 +458,12 @@ lines in the region have indentation >= that of the first line."
         (replace-match (make-string (max 0 (+ ci n)) ? ) bound nil)))))
 
 (defun pug-electric-backspace (arg)
-  "Delete characters or back-dent the current line.
-If invoked following only whitespace on a line, will back-dent
-the line and all nested lines to the immediately previous
-multiple of `tab-width' spaces.
+  "Delete characters or back-dent the current line. If invoked following only
+whitespace on a line, will back-dent the line and all nested lines to the
+immediately previous multiple of `tab-width' spaces.
 
-Set `pug-backspace-backdents-nesting' to nil to just back-dent
-the current line."
+Set `pug-backspace-backdents-nesting' to nil to just back-dent the current
+line."
   (interactive "*p")
   (if (or (/= (current-indentation) (current-column))
           (bolp)
@@ -506,6 +494,5 @@ the current line."
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.\\(jade\\|pug\\)\\'" . pug-mode))
 
-;; Setup/Activation
 (provide 'pug-mode)
 ;;; pug-mode.el ends here
