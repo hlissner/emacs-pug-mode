@@ -148,10 +148,10 @@ line could be nested within this line.")
     ("^ *\\+\\([a-z0-9_-]+\\)"
      0 font-lock-builtin-face)
     ;; #id
-    ("^ *[a-z0-9_.-]*\\(#[a-z0-9_-]+\\((.*)\\)?\\)[^ \t]*$"
+    ("^ *[a-z0-9_.-]*\\(#[a-z0-9_-]+\\((.*)\\)?\\)[^ \t\n]*"
      1 font-lock-keyword-face append)
     ;; .class
-    ("^ *[a-z0-9_#-]*\\(\\(\\.[a-z0-9_-]+\\((.*)\\)?\\)+\\)[^ \t]*$"
+    ("^ *[a-z0-9_#-]*\\(\\(\\.[a-z0-9_-]+\\((.*)\\)?\\)+\\)[^ \t\n]*"
      1 font-lock-variable-name-face append)
     ;; tag
     (,pug-tags-re
