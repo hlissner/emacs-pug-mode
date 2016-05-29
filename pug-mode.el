@@ -244,6 +244,8 @@ declaration"
   (set (make-local-variable 'indent-region-function) 'pug-indent-region)
   (set (make-local-variable 'parse-sexp-lookup-properties) t)
   (set (make-local-variable 'electric-indent-chars) nil)
+  (set (make-local-variable 'comment-start) "//")
+  (set (make-local-variable 'comment-end) "")
   (setq comment-start "/")
   (setq indent-tabs-mode nil)
   (setq font-lock-defaults '((pug-font-lock-keywords) nil t)))
