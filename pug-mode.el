@@ -183,7 +183,7 @@ line could be nested within this line.")
         (beginning-of-line)
         (unless (or (looking-at pug-embedded-re)
                     (looking-at pug-comment-re))
-          (return-from pug-extend-region)))
+          (cl-return-from pug-extend-region)))
       (setq font-lock-beg (point))
       (pug-forward-sexp)
       (beginning-of-line)
@@ -282,9 +282,9 @@ the buffer or a line with no whitespace.
 If `backward' is non-nil, move the point backward instead."
   (let ((arg (if backward -1 1))
         (endp (if backward 'bobp 'eobp)))
-    (loop do (forward-line arg)
-          while (and (not (funcall endp))
-                     (looking-at "^[ \t]*$")))))
+    (cl-loop do (forward-line arg)
+             while (and (not (funcall endp))
+                        (looking-at "^[ \t]*$")))))
 
 (defun pug-at-indent-p ()
   "Returns whether or not the point is at the first non-whitespace character in
@@ -306,10 +306,10 @@ beneath it."
       (back-to-indentation)
     (while (/= arg 0)
       (let ((indent (current-indentation)))
-        (loop do (pug-forward-through-whitespace (< arg 0))
-              while (and (not (eobp))
-                         (not (bobp))
-                         (> (current-indentation) indent)))
+        (cl-loop do (pug-forward-through-whitespace (< arg 0))
+                 while (and (not (eobp))
+                            (not (bobp))
+                            (> (current-indentation) indent)))
         (back-to-indentation)
         (setq arg (+ arg (if (> arg 0) -1 1)))))))
 
@@ -328,9 +328,9 @@ beneath it."
   (or arg (setq arg 1))
   (while (> arg 0)
     (let ((indent (current-indentation)))
-      (loop do (pug-forward-through-whitespace t)
-            while (and (not (bobp))
-                       (>= (current-indentation) indent)))
+      (cl-loop do (pug-forward-through-whitespace t)
+               while (and (not (bobp))
+                          (>= (current-indentation) indent)))
       (setq arg (- arg 1))))
   (back-to-indentation))
 
@@ -379,12 +379,12 @@ the sexp rather than the first non-whitespace character of the next line."
              (back-to-indentation)
              (not (memq (face-at-point) '(font-lock-preprocessor-face))))
            (not (looking-at-p pug-selfclosing-tags-re))
-           (loop for opener in `(,(concat "^ *\\([\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
-                                 "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
-                                 "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
-                                 ,pug-control-re)
-                 if (looking-at-p opener) return t
-                 finally return nil))))
+           (cl-loop for opener in `(,(concat "^ *\\([\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
+                                    "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
+                                    "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
+                                    ,pug-control-re)
+                    if (looking-at-p opener) return t
+                    finally return nil))))
 
 (defun pug-compute-indentation ()
   "Calculate the maximum sensible indentation for the current line."
@@ -420,8 +420,8 @@ indentations."
         (delete-horizontal-space)
         (unless (eolp)
           (setq next-line-column (save-excursion
-                                   (loop do (forward-line 1)
-                                         while (and (not (eobp)) (looking-at "^[ \t]*$")))
+                                   (cl-loop do (forward-line 1)
+                                            while (and (not (eobp)) (looking-at "^[ \t]*$")))
                                    (+ this-line-column
                                       (- (current-indentation) current-column))))
           ;; Don't indent an empty line
