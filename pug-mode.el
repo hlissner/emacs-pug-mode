@@ -11,8 +11,8 @@
 ;; Author: Henrik Lissner
 ;; Maintainer: Henrik Lissner <henrik@lissner.net>
 ;; Created: February 18, 2016
-;; Modified: May 28, 2016
-;; Version: 1.0.1
+;; Modified: May 29, 2016
+;; Version: 1.0.2
 ;; Homepage: https://github.com/hlissner/pug-mode
 ;; Keywords: markup, language, jade pug
 ;; Package-Requires: ((cl-lib "0.5"))
