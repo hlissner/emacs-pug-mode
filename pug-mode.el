@@ -109,41 +109,40 @@ line could be nested within this line.")
 (defconst pug-font-lock-keywords
   `(;; plain text block
     (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
-     3 font-lock-string-face)
+     (3 font-lock-string-face))
     ;; comment block
     (,(pug-nested-re "-?//-?")
-     0 font-lock-comment-face)
+     (0 font-lock-comment-face))
     ;; comment line
     ("^ *\\(-//\\|//-?\\).*"
-     0 font-lock-comment-face prepend)
+     (0 font-lock-comment-face prepend))
     ;; html comment block
     ("<!--.*-->"
-     0 font-lock-comment-face)
+     (0 font-lock-comment-face))
     ;; filters
     (,(pug-nested-re "\\(:[a-z0-9_]+\\)")
      (0 font-lock-preprocessor-face prepend))
-
+    ;; block keywords
     (,pug-control-re
-     2 font-lock-keyword-face append)
-
-    ("^ *|.*"
-     0 font-lock-string-face)
-
+     (2 font-lock-keyword-face append))
+    ;; Plain text
+    ("^ *|.*" . 'font-lock-string-face)
+    ;; interpolation
+    ("[#!]{[^}]+}"
+     (0 font-lock-preprocessor-face append))
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
      1 font-lock-string-face append)
     ;; Double quoted string
-    ("\\(\"[^\"]*\"\\)"
-     1 font-lock-string-face append)
-
-    ;; interpolation
-    ("[#!]{.+}" . font-lock-constant-face)
+    ;; ("\\(\"[^\"]*\"\\)"
+    ;;  1 font-lock-string-face append)
 
     ("^ *\\(include\\)\\(:[^ \t]+\\|\\)\\(.+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))
 
+    ;; TODO use subgroups
     ;; +mixin invocation
     ("^ *\\+\\([a-z0-9_-]+\\)"
      0 font-lock-builtin-face)
