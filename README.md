@@ -1,6 +1,6 @@
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
-[![MELPA](http://melpa.org/packages/pug-mode-badge.svg)](http://melpa.org/#/evil-snipe)
-[![MELPA Stable](http://stable.melpa.org/packages/pug-mode-badge.svg)](http://stable.melpa.org/#/evil-snipe)
+[![MELPA](http://melpa.org/packages/pug-mode-badge.svg)](http://melpa.org/#/pug-mode)
+[![MELPA Stable](http://stable.melpa.org/packages/pug-mode-badge.svg)](http://stable.melpa.org/#/pug-mode)
 
 # pug-mode
 
