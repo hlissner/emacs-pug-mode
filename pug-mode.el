@@ -137,7 +137,8 @@ line could be nested within this line.")
     ;; ("\\(\"[^\"]*\"\\)"
     ;;  1 font-lock-string-face append)
 
-    ("^ *\\(include\\)\\(:[^ \t]+\\|\\)\\(.+\\)\n"
+    ;; include statements
+    ("\\<\\(include\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))
