@@ -53,7 +53,7 @@ the backspaced line be re-indented along with the line itself."
 line could be nested within this line.")
 
 (defconst pug-tags-re
-  (concat "^ *\\("
+  (concat "\\(?:^\\s-*\\|:\\s-+\\)"
           (regexp-opt
            '("a" "abbr" "acronym" "address" "applet" "area" "article" "aside"
              "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body" "br"
@@ -68,8 +68,7 @@ line could be nested within this line.")
              "s" "samp" "script" "section" "select" "small" "source" "span"
              "strike" "strong" "style" "sub" "sup" "table" "tbody" "td"
              "textarea" "tfoot" "th" "thead" "time" "title" "tr" "tt" "u" "ul"
-             "var" "video" "xmp") 'words)
-          "\\)")
+             "var" "video" "xmp") 'words))
   "Regex of all html4/5 tags.")
 
 (defconst pug-selfclosing-tags-re
@@ -106,10 +105,27 @@ line could be nested within this line.")
   (concat "^\\( *\\)" re "\\(\\(\n\\(?:\\1 +[^\n]*\\)?\\)*\\)"))
 
 ;; Font lock
+;; TODO pug-mode specific faces?
 (defconst pug-font-lock-keywords
-  `(;; plain text block
-    (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
-     (3 font-lock-string-face))
+  `(("^\\s-*[[:alnum:]_#.]"
+     ;; id selectors
+     ("\\(#[[:alnum:]_-]+\\)(?"
+      (beginning-of-line) nil
+      (1 font-lock-keyword-face append))
+     ;; class selectors
+     ("\\(\\.[a-z0-9_-]+\\)(?"
+      (beginning-of-line) nil
+      (1 font-lock-variable-name-face append))
+     ;; Clear after : or selectors
+     ("[[:alnum:]_)]\\(?::\\s-+[^ ]+\\|\\s-+\\)\\([^\n]*\\)"
+      (beginning-of-line) nil
+      (1 nil t)))
+    ;; Tags
+    (,pug-tags-re (1 font-lock-function-name-face))
+    ;; +mixin invocation
+    ("^ *\\+\\([a-z0-9_-]+\\)"
+     0 font-lock-builtin-face)
+
     ;; comment block
     (,(pug-nested-re "-?//-?")
      (0 font-lock-comment-face))
@@ -125,11 +141,7 @@ line could be nested within this line.")
     ;; block keywords
     (,pug-control-re
      (2 font-lock-keyword-face append))
-    ;; Plain text
-    ("^ *|.*" . 'font-lock-string-face)
-    ;; interpolation
-    ("[#!]{[^}]+}"
-     (0 font-lock-preprocessor-face append))
+
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
      1 font-lock-string-face append)
@@ -137,41 +149,46 @@ line could be nested within this line.")
     ;; ("\\(\"[^\"]*\"\\)"
     ;;  1 font-lock-string-face append)
 
+    ;; plain text block
+    (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
+     (3 font-lock-string-face t))
+    ;; Plain text inline
+    ("^ *|.*" (0 font-lock-string-face t))
+
+    ;; interpolation
+    ("[#!]\\({[^}]+}\\|\\[[^]]+\\]\\)"
+     (0 font-lock-preprocessor-face prepend))
+
+    ;; doctype
+    ("^\\(doctype .*$\\)"
+     1 font-lock-comment-face)
     ;; include statements
     ("\\<\\(include\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))
 
-    ;; TODO use subgroups
-    ;; +mixin invocation
-    ("^ *\\+\\([a-z0-9_-]+\\)"
-     0 font-lock-builtin-face)
-    ;; #id
-    ("^ *[a-z0-9_.-]*\\(#[a-z0-9_-]+\\((.*)\\)?\\)[^ \t\n]*"
-     1 font-lock-keyword-face append)
-    ;; .class
-    ("^ *[a-z0-9_#-]*\\(\\(\\.[a-z0-9_-]+\\((.*)\\)?\\)+\\)[^ \t\n]*"
-     1 font-lock-variable-name-face append)
-    ;; tag
-    (,pug-tags-re
-     1 font-lock-function-name-face)
+    ;; attributes
+    ("[a-z0-9-_]("
+     ("\\(?:(\\|,\\s-*\\)\\([[:alnum:]_-]+\\)\\(\\s-*=\\s-*\\('[^']+'\\|\"[^\"]+\"\\|[^,]+\\)\\)?"
+      (backward-char) (forward-char)
+      (1 font-lock-constant-face)))
 
-    ;; doctype
-    ("^\\(doctype .*$\\)"
-     1 font-lock-comment-face)
     ;; ==', =', -
-    ("^ *\\(==?'?\\|-\\)"
-      (1 font-lock-preprocessor-face)
-      (,(regexp-opt
-         '("if" "else" "elsif" "for" "in" "do" "unless"
-           "while" "yield" "not" "and" "or")
-         'words) nil nil
-           (0 font-lock-keyword-face)))
+    ("^\\s-*\\(!?==?'?\\|-\\)\\s-"
+     (1 font-lock-preprocessor-face)
+     (,(regexp-opt
+        '("if" "else" "elsif" "for" "in" "do" "unless"
+          "while" "yield" "not" "and" "or" "return"
+          "function" "var")
+        'words) nil nil
+        (0 font-lock-keyword-face)))
     ;; tag ==, tag =
-    ("^ *[\\.#a-z0-9_-]+.*[^<>!]\\(==?'?\\) +"
-     1 font-lock-preprocessor-face)
-    ))
+    ("^\\s-*[.#a-z0-9_-]\\([#a-z0-9_.-]\\|([^)]*)\\)+\\(!?=\\)\\s-"
+     (2 font-lock-preprocessor-face append)
+     ("\\([[:alnum:]_]+\\)("
+      nil nil
+      (1 font-lock-function-name-face)))))
 
 (cl-defun pug-extend-region ()
   "Extend the font-lock region to encompass embedded engines and comments."
@@ -213,6 +230,7 @@ declaration"
   (let ((table (make-syntax-table)))
     (modify-syntax-entry ?\" "\"" table)
     (modify-syntax-entry ?\' "." table)
+    (modify-syntax-entry ?# "." table)
     (modify-syntax-entry ?. "." table)
     (modify-syntax-entry ?: "." table)
     (modify-syntax-entry ?# "." table)
@@ -251,7 +269,7 @@ declaration"
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-end "")
   (setq-local comment-end-skip "[ 	]*\\(\\s>\\|\n\\)")
-  (setq indent-tabs-mode nil)
+  (setq-local indent-tabs-mode nil)
   (setq font-lock-defaults '((pug-font-lock-keywords) nil t)))
 
 ;; Useful functions
@@ -385,7 +403,7 @@ the sexp rather than the first non-whitespace character of the next line."
              (back-to-indentation)
              (not (memq (face-at-point) '(font-lock-preprocessor-face))))
            (not (looking-at-p pug-selfclosing-tags-re))
-           (cl-loop for opener in `(,(concat "^ *\\([\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
+           (cl-loop for opener in `(,(concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
                                     "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
                                     "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
                                     ,pug-control-re)
