@@ -209,10 +209,13 @@ declaration"
       (forward-sexp 1)))
 
 ;; Mode setup
-
 (defvar pug-mode-syntax-table
   (let ((table (make-syntax-table)))
+    (modify-syntax-entry ?\" "\"" table)
+    (modify-syntax-entry ?\' "." table)
+    (modify-syntax-entry ?. "." table)
     (modify-syntax-entry ?: "." table)
+    (modify-syntax-entry ?# "." table)
     (modify-syntax-entry ?_ "w" table)
     table)
   "Syntax table in use in pug-mode buffers.")
