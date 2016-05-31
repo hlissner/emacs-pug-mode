@@ -14,7 +14,7 @@
 ;; Modified: May 30, 2016
 ;; Version: 1.0.3
 ;; Homepage: https://github.com/hlissner/pug-mode
-;; Keywords: markup, language, jade pug
+;; Keywords: markup, language, jade, pug
 ;; Package-Requires: ((cl-lib "0.5"))
 ;;
 ;; This file is not part of GNU Emacs.

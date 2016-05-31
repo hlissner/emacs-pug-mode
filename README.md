@@ -33,4 +33,10 @@ developers!
 
 + Define faces to improve customizability
 + Use multiline-font-lock
-+ Optimize pug-indent-p and regex
++ Optimize pug-indent-p and font-lock regexes
++ Refactor out vestigial slim-mode code
+
+## Contributions
+
+I'm inexperienced at writing major modes for Emacs. Any contributions are
+welcome and appreciated!
