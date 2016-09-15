@@ -29,6 +29,15 @@ to adapt it to Pug in—what I think—is a better result. Most of the code is
 lifted right out of slim-mode, so much of the credit belongs to its original
 developers!
 
+## Auto-compiling pug files
+
+This plugin introduces a `pug-compile` function. You can call it
+directly (e.g. `M-x pug-compile`) or have it done automatically:
+
+`(add-hook 'after-save-hook 'pug-compile)`
+
+It requires [pug-cli](https://www.npmjs.com/package/pug-cli).
+
 ## TODO
 
 + Define faces to improve customizability

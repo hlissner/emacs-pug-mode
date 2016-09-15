@@ -517,6 +517,13 @@ line."
   (mapconcat 'identity (make-list tab-width " ") ""))
 
 ;;;###autoload
+(defun pug-compile ()
+  (interactive)
+  (if (memq major-mode '(pug-mode jade-mode))
+      (compile (format "pug %s" buffer-file-name))
+    (user-error "Not in a pug-mode buffer")))
+
+;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.\\(jade\\|pug\\)\\'" . pug-mode))
 
 (provide 'pug-mode)
