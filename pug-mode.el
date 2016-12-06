@@ -62,7 +62,7 @@ line could be nested within this line.")
              "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
              "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6" "head"
              "header" "hgroup" "hr" "html" "i" "iframe" "img" "input" "ins"
-             "keygen" "kbd" "label" "legend" "li" "link" "map" "mark" "menu"
+             "keygen" "kbd" "label" "legend" "li" "link" "map" "main" "mark" "menu"
              "meta" "meter" "nav" "noframes" "noscript" "object" "ol" "optgroup"
              "option" "output" "p" "param" "pre" "progress" "q" "rp" "rt" "ruby"
              "s" "samp" "script" "section" "select" "small" "source" "span"
@@ -83,8 +83,8 @@ line could be nested within this line.")
 (defconst pug-control-re
   (concat "^ *\\(- \\)?\\("
           (regexp-opt
-           '("if" "unless" "while" "until" "else" "for" "begin" "elsif" "when"
-             "default" "case" "var'"
+           '("if" "unless" "while" "until" "else" "for" "each" "in" "begin" 
+             "elsif" "when" "default" "case" "var'"
 
              "extends" "block" "mixin"
              ) 'words)
