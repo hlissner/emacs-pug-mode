@@ -83,8 +83,8 @@ line could be nested within this line.")
 (defconst pug-control-re
   (concat "^ *\\(- \\)?\\("
           (regexp-opt
-           '("if" "unless" "while" "until" "else" "for" "begin" "elsif" "when"
-             "default" "case" "var'"
+           '("if" "unless" "while" "until" "else" "for" "each" "in" "begin" 
+             "elsif" "when" "default" "case" "var'"
 
              "extends" "block" "mixin"
              ) 'words)
