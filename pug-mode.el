@@ -141,7 +141,9 @@ line could be nested within this line.")
     ;; block keywords
     (,pug-control-re
      (2 font-lock-keyword-face append))
-
+    ;; "in" keyword in "each" statement
+    ("each\\s-+\\w*\\s-+\\(in\\)" (1 font-lock-keyword-face))
+    
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
      1 font-lock-string-face append)
