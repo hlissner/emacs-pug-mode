@@ -169,8 +169,9 @@ line could be nested within this line.")
      (3 font-lock-string-face))
 
     ;; attributes
+    ;; FIXME Doesn't take inline js or multiline attributes into account
     ("[a-z0-9-_]("
-     ("\\(?:(\\|,\\s-*\\)\\([[:alnum:]_-]+\\)\\(\\s-*=\\s-*\\('[^']+'\\|\"[^\"]+\"\\|[^,]+\\)\\)?"
+     ("\\(?:(\\|,?\\s-*\\)\\([[:alnum:]_-]+\\)\\(\\s-*=\\s-*\\('[^']+'\\|\"[^\"]+\"\\)\\)?"
       (backward-char) (forward-char)
       (1 font-lock-constant-face)))
 
