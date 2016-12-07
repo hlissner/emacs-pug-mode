@@ -74,7 +74,7 @@ line could be nested within this line.")
 (defconst pug-selfclosing-tags-re
   (concat "^ *"
           (regexp-opt
-           '("meta" "title" "img" "area" "base" "br" "col" "command" "embed"
+           '("meta" "img" "area" "base" "br" "col" "command" "embed"
              "hr" "input" "link" "param" "source" "track" "wbr") t)))
 
 (defconst pug-keywords-re
