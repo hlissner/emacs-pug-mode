@@ -164,8 +164,8 @@ line could be nested within this line.")
     ;; doctype
     ("^\\(doctype .*$\\)"
      1 font-lock-comment-face)
-    ;; include statements
-    ("\\<\\(include\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
+    ;; include/extends statements
+    ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))

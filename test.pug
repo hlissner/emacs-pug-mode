@@ -67,6 +67,7 @@ html(lang="en", class = ['classOne', 'classTwo'].join(','))
           span#id.class(style = 'margin-bottom: 0;')= "some_js_expression".split('_').join(' ')
           include:markdown article.md
           include test.md
+          extends layout
       #footer
         #copywrite-text= locals
 
@@ -89,3 +90,24 @@ h1= title
   p Written with love by #{author}
   p This will be safe: #{theGreat}
 
+ul
+  each item in object
+    li= item
+
+h1 This is an #[strong important] heading
+
+h1.class-name
+  strong something
+  | something else
+
+.nested-block
+  p Just a text line
+  
+  .nested-element
+    p Something
+    
+    .supernested-element
+      p Anything
+      
+  .nested-element
+    p Something else
