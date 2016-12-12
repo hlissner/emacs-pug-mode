@@ -7,7 +7,10 @@ html(lang="en", class = ['classOne', 'classTwo'].join(','))
     #container
       #header
         extends .test
+        include something
+        
         h1.page-title My.awesome. page #is awesome#
+      .element Content
       #nav
         ul#nav_list something sweet
           li
@@ -26,6 +29,10 @@ html(lang="en", class = ['classOne', 'classTwo'].join(','))
         p.
           Hello world how are you
           doing today
+
+        p
+          | This is a text | asdasdklsjd
+          | this is another text
 
         :markdown
           Filters should work too!

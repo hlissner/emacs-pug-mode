@@ -152,10 +152,12 @@ line could be nested within this line.")
      1 font-lock-string-face append)
 
     ;; plain text block
-    (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
-     (3 font-lock-string-face t))
+    ;;(,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
+    ;; (3 font-lock-string-face t))
+
     ;; Plain text inline
-    ("^ *|.*" (0 font-lock-string-face t))
+    ("^\\s-*\\(|\\).*$"
+     (1 font-lock-function-name-face t))
 
     ;; interpolation
     ("[#!]\\({[^}]+}\\|\\[[^]]+\\]\\)"
