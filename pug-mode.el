@@ -59,7 +59,7 @@ line could be nested within this line.")
              "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body" "br"
              "button" "canvas" "caption" "center" "cite" "code" "col" "colgroup"
              "command" "datalist" "dd" "del" "details" "dialog" "dfn" "dir"
-             "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
+             "div" "dl" "dt" "em" "embed" "fieldset" "figure" "figcaption" "font" "footer"
              "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6" "head"
              "header" "hgroup" "hr" "html" "i" "iframe" "img" "input" "ins"
              "keygen" "kbd" "label" "legend" "li" "link" "map" "main" "mark" "menu"
