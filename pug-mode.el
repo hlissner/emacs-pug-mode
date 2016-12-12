@@ -159,10 +159,14 @@ line could be nested within this line.")
     ("^\\s-*\\(|\\).*$"
      (1 font-lock-function-name-face t))
 
-    ;; interpolation
-    ("[#!]\\({[^}]+}\\|\\[[^]]+\\]\\)"
-     (0 font-lock-preprocessor-face prepend))
+    ;; String interpolation
+    ("[#!]{\\([^}]+\\)}"
+     (1 font-lock-preprocessor-face))
 
+    ;; Tag interpolation
+    ("#\\[\\(\\sw+\\).*?\\]"
+     (1 font-lock-function-name-face))
+    
     ;; doctype
     ("^\\(doctype .*$\\)"
      1 font-lock-comment-face)

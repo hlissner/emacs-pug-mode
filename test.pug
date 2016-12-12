@@ -8,12 +8,15 @@ html(lang="en", class = ['classOne', 'classTwo'].join(','))
       #header
         extends .test
         include something
+
+        h1 This is a #[strong very important] heading
         
-        h1.page-title My.awesome. page #is awesome#
+        h1.page-title My.awesome. #{page} #is awesome#
       .element Content
       #nav
-        ul#nav_list something sweet
+        ul#nav_list something !{sweet}
           li
+          li: a(href='#') Something
       #content
         p.
           This should be a block of plain text
@@ -100,8 +103,6 @@ h1= title
 ul
   each item in object
     li= item
-
-h1 This is an #[strong important] heading
 
 h1.class-name
   strong something
