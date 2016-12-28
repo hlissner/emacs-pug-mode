@@ -304,3 +304,51 @@ p
     Filter
     Body
 
+//--------------------------------------------------
+// Includes
+//--------------------------------------------------
+
+//- index.pug
+doctype html
+html
+  include includes/head.pug
+  body
+    h1 My Site
+    p Welcome to my super lame site.
+    include includes/foot.pug
+
+//- includes/head.pug
+head
+  title My Site
+  script(src='/javascripts/jquery.js')
+  script(src='/javascripts/app.js')
+
+//- includes/foot.pug
+footer#footer
+  p Copyright (c) foobar
+
+//--------------------------------------------------
+// Including Plain Text
+//--------------------------------------------------
+
+doctype html
+html
+  head
+    style
+      include style.css
+  body
+    h1 My Site
+    p Welcome to my super lame site.
+    script
+      include script.js
+
+//--------------------------------------------------
+// Including Filtered Tex
+
+doctype html
+html
+  head
+    title An Article
+  body
+    include:markdown-it article.md
+
