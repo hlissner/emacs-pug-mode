@@ -352,3 +352,42 @@ html
   body
     include:markdown-it article.md
 
+//--------------------------------------------------
+// Template Inheritance
+//--------------------------------------------------
+
+html
+  head
+    title My Site - #{title}
+    block scripts
+      script(src='/jquery.js')
+  body
+    block content
+    block foot
+      #footer
+        p some footer content
+
+extends layout.pug
+
+block scripts
+  script(src='/jquery.js')
+  script(src='/pets.js')
+
+block content
+  h1= title
+  - var pets = ['cat', 'dog']
+  each petName in pets
+    include pet.pug
+
+//--------------------------------------------------
+// Block append / prepend
+
+extends layout.pug
+block append head
+  script(src='/vendor/three.js')
+  script(src='/game.js')
+
+extends layout
+append head
+  script(src='/vendor/three.js')
+  script(src='/game.js')
