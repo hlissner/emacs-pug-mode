@@ -161,3 +161,28 @@ p
   != 'This code is <strong>not</strong> escaped!'
 
 p!= 'This code is' + ' <strong>not</strong> escaped!'
+
+//--------------------------------------------------
+// Comments
+
+// just some paragraphs
+p foo
+p bar
+
+//- will not output within markup
+p foo
+p bar
+
+body
+  //
+    As much text as you want
+    can go here.
+
+// All lines beginning with < are treated as plain text
+<!--[if IE 8]>
+<html lang="en" class="lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+
