@@ -132,3 +132,32 @@ case friends
   when 0: p you have no friends
   when 1: p you have a friend
   default: p you have #{friends} friends
+
+//--------------------------------------------------
+// Code
+//--------------------------------------------------
+
+- for (var x = 0; x < 3; x++)
+  li item
+
+-
+  var list = ["Uno", "Dos", "Tres",
+          "Cuatro", "Cinco", "Seis"]
+each item in list
+  li= item
+
+//--------------------------------------------------
+// Buffered Code
+
+p
+  = 'This code is <escaped>!'
+
+p= 'This code is' + ' <escaped>!'
+
+//--------------------------------------------------
+// Unescaped Buffered Code
+
+p
+  != 'This code is <strong>not</strong> escaped!'
+
+p!= 'This code is' + ' <strong>not</strong> escaped!'
