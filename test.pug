@@ -90,3 +90,45 @@ div#foo(data-bar="foo")&attributes({'data-foo': 'bar'})
 - var attributes = {};
 - attributes.class = 'baz';
 div#foo(data-bar="foo")&attributes(attributes)
+
+//--------------------------------------------------
+// Case
+//--------------------------------------------------
+
+- var friends = 10
+case friends
+  when 0
+    p you have no friends
+  when 1
+    p you have a friend
+  default
+    p you have #{friends} friends
+
+//--------------------------------------------------
+// Case Fall Through
+
+- var friends = 0
+case friends
+  when 0
+  when 1
+    p you have very few friends
+  default
+    p you have #{friends} friends
+
+- var friends = 0
+case friends
+  when 0
+    - break
+  when 1
+    p you have very few friends
+  default
+    p you have #{friends} friends
+
+//--------------------------------------------------
+// Block Expansion
+
+- var friends = 1
+case friends
+  when 0: p you have no friends
+  when 1: p you have a friend
+  default: p you have #{friends} friends
