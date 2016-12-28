@@ -532,3 +532,25 @@ mixin list(id, ...items)
 
 +list('my-list', 1, 2, 3, 4)
 
+//--------------------------------------------------
+// Plain Text
+//--------------------------------------------------
+
+| Plain text can include <strong>html</strong>
+p
+  | It must always be on its own line
+
+//--------------------------------------------------
+// Inline in a Tag
+
+p Plain text can include <strong>html</strong>
+
+//--------------------------------------------------
+// Block in a Tag
+
+script.
+  if (usingPug)
+    console.log('you are awesome')
+  else
+    console.log('use pug')
+
