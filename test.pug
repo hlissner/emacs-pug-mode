@@ -438,3 +438,33 @@ p
   | might produce unexpected results.
 p.
   If I do, whitespace is #[strong respected] and #[em everybody] is happy.
+
+//--------------------------------------------------
+// Iteration
+//--------------------------------------------------
+
+ul
+  each val in [1, 2, 3, 4, 5]
+    li= val
+
+ul
+  each val, index in ['zero', 'one', 'two']
+    li= index + ': ' + val
+
+ul
+  each val, index in {1:'one',2:'two',3:'three'}
+    li= index + ': ' + val
+
+ul
+  each val in values.length ? values : ['There are no values']
+    li= val
+
+ul
+  each val in values
+    li= val
+  else
+    li There are no values
+
+ul
+  while n < 4
+    li= n++
