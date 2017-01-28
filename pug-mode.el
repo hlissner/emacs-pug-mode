@@ -59,7 +59,7 @@ line could be nested within this line.")
              "audio" "b" "base" "basefont" "bdo" "big" "blockquote" "body" "br"
              "button" "canvas" "caption" "center" "cite" "code" "col" "colgroup"
              "command" "datalist" "dd" "del" "details" "dialog" "dfn" "dir"
-             "div" "dl" "dt" "em" "embed" "fieldset" "figure" "font" "footer"
+             "div" "dl" "dt" "em" "embed" "fieldset" "figure" "figcaption" "font" "footer"
              "form" "frame" "frameset" "h1" "h2" "h3" "h4" "h5" "h6" "head"
              "header" "hgroup" "hr" "html" "i" "iframe" "img" "input" "ins"
              "keygen" "kbd" "label" "legend" "li" "link" "map" "main" "mark" "menu"
@@ -152,20 +152,26 @@ line could be nested within this line.")
      1 font-lock-string-face append)
 
     ;; plain text block
-    (,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
-     (3 font-lock-string-face t))
+    ;;(,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
+    ;; (3 font-lock-string-face t))
+
     ;; Plain text inline
-    ("^ *|.*" (0 font-lock-string-face t))
+    ("^\\s-*\\(|\\).*$"
+     (1 font-lock-function-name-face t))
 
-    ;; interpolation
-    ("[#!]\\({[^}]+}\\|\\[[^]]+\\]\\)"
-     (0 font-lock-preprocessor-face prepend))
+    ;; String interpolation
+    ("[#!]{\\([^}]+\\)}"
+     (1 font-lock-preprocessor-face))
 
+    ;; Tag interpolation
+    ("#\\[\\(\\sw+\\).*?\\]"
+     (1 font-lock-function-name-face))
+    
     ;; doctype
     ("^\\(doctype .*$\\)"
      1 font-lock-comment-face)
-    ;; include statements
-    ("\\<\\(include\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
+    ;; include/extends statements
+    ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))

@@ -1,74 +1,497 @@
+//--------------------------------------------------
+// Attributes
+//--------------------------------------------------
+
+a(href='google.com') Google
+a(class='button' href='google.com') Google
+a(class='button', href='google.com') Google
+
+- var authenticated = true
+body(class=authenticated ? 'authed' : 'anon')
+
+//--------------------------------------------------
+// Multiline Attributes
+
+input(
+  type='checkbox'
+  name='agreement'
+  checked
+)
+
+input(data-json=`
+  {
+    "very-long": "piece of ",
+    "data": true
+  }
+`)
+
+//--------------------------------------------------
+// Quoted Attributes
+
+div(class='div-class', (click)='play()')
+div(class='div-class' '(click)'='play()')
+
+//--------------------------------------------------
+// Attribute Interpolation
+
+- var btnType = 'info'
+- var btnSize = 'lg'
+button(type='button' class='btn btn-' + btnType + ' btn-' + btnSize)
+button(type='button' class=`btn btn-${btnType} btn-${btnSize}`)
+
+//--------------------------------------------------
+// Unescaped Attributes
+
+div(escaped="<code>")
+div(unescaped!="<code>")
+
+//--------------------------------------------------
+// Boolean Attributes
+
+input(type='checkbox' checked)
+input(type='checkbox' checked=true)
+input(type='checkbox' checked=false)
+input(type='checkbox' checked=true.toString())
+input(type='checkbox' checked=true && 'checked')
+
+//--------------------------------------------------
+// Style Attributes
+
+a(style={color: 'red', background: 'green'})
+
+//--------------------------------------------------
+// Class Attributes
+
+- var classes = ['foo', 'bar', 'baz']
+a(class=classes)
+a.bang(class=classes class=['bing'])
+
+- var currentUrl = '/about'
+a(class={active: currentUrl === '/'} href='/') Home
+a(class={active: currentUrl === '/about'} href='/about') About
+
+//--------------------------------------------------
+// Class Literal
+
+a.button
+.content
+
+//--------------------------------------------------
+// ID Literal
+
+a#main-link
+#content
+
+//--------------------------------------------------
+// &attributes
+
+div#foo(data-bar="foo")&attributes({'data-foo': 'bar'})
+
+- var attributes = {};
+- attributes.class = 'baz';
+div#foo(data-bar="foo")&attributes(attributes)
+
+//--------------------------------------------------
+// Case
+//--------------------------------------------------
+
+- var friends = 10
+case friends
+  when 0
+    p you have no friends
+  when 1
+    p you have a friend
+  default
+    p you have #{friends} friends
+
+//--------------------------------------------------
+// Case Fall Through
+
+- var friends = 0
+case friends
+  when 0
+  when 1
+    p you have very few friends
+  default
+    p you have #{friends} friends
+
+- var friends = 0
+case friends
+  when 0
+    - break
+  when 1
+    p you have very few friends
+  default
+    p you have #{friends} friends
+
+//--------------------------------------------------
+// Block Expansion
+
+- var friends = 1
+case friends
+  when 0: p you have no friends
+  when 1: p you have a friend
+  default: p you have #{friends} friends
+
+//--------------------------------------------------
+// Code
+//--------------------------------------------------
+
+- for (var x = 0; x < 3; x++)
+  li item
+
+-
+  var list = ["Uno", "Dos", "Tres",
+          "Cuatro", "Cinco", "Seis"]
+each item in list
+  li= item
+
+//--------------------------------------------------
+// Buffered Code
+
+p
+  = 'This code is <escaped>!'
+
+p= 'This code is' + ' <escaped>!'
+
+//--------------------------------------------------
+// Unescaped Buffered Code
+
+p
+  != 'This code is <strong>not</strong> escaped!'
+
+p!= 'This code is' + ' <strong>not</strong> escaped!'
+
+//--------------------------------------------------
+// Comments
+
+// just some paragraphs
+p foo
+p bar
+
+//- will not output within markup
+p foo
+p bar
+
+body
+  //
+    As much text as you want
+    can go here.
+
+// All lines beginning with < are treated as plain text
+<!--[if IE 8]>
+<html lang="en" class="lt-ie9">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+//--------------------------------------------------
+// Conditionals
+//--------------------------------------------------
+
+- var user = { description: 'foo bar baz' }
+- var authorised = false
+#user
+  if user.description
+    h2.green Description
+    p.description= user.description
+  else if authorised
+    h2.blue Description
+    p.description.
+      User has no description,
+      why not add one...
+  else
+    h2.red Description
+    p.description User has no description
+
+unless user.isAnonymous
+  p You're logged in as #{user.name}
+
+//--------------------------------------------------
+// Doctype
+//--------------------------------------------------
+
 doctype html
-html(lang="en", class = ['classOne', 'classTwo'].join(','))
-  //- consult http://jade-lang.com for a full language reference
+
+//--------------------------------------------------
+// Doctype Shortcuts
+
+<!DOCTYPE html>
+
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN" "http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd">
+
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.2//EN" "http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd">
+
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+
+//--------------------------------------------------
+// Custom Doctypes
+
+doctype html PUBLIC "-//W3C//DTD XHTML Basic 1.1//EN"
+
+//--------------------------------------------------
+// Extends—Template Inheritance
+//--------------------------------------------------
+
+//- index.pug
+extends layout.pug
+
+block title
+  title Article Title
+
+block content
+  h1 My Article
+
+//- layout.pug
+doctype html
+html
   head
-    title My page
-  body.bp
-    #container
-      #header
-        extends .test
-        h1.page-title My.awesome. page #is awesome#
-      #nav
-        ul#nav_list something sweet
-          li
-      #content
-        p.
-          This should be a block of plain text
-          that can go on for as many lines as needed.
+    block title
+      title Default title
+  body
+    block content
 
-          Even if it's interrupted with blank lines.
-          <!-- test -->
+//--------------------------------------------------
+// Filters
+//--------------------------------------------------
 
-        p
-          | More plain text goodness, but this one
-          | requires a pipe to denote plain-textness
+:markdown-it(linkify langPrefix='highlight-')
+  # Markdown
 
-        p.
-          Hello world how are you
-          doing today
+  Markdown document with http://links.com and
 
-        :markdown
-          Filters should work too!
+  ```js
+  var codeBlocks;
+  ```
+script
+  :coffee-script
+    console.log 'This is coffee script'
 
-        // here is a real comment
-        -// here is another real comment
-        //- here is a THIRD real comment syntax (what?) (this one is documented)
+//--------------------------------------------------
+// Inline Syntax
 
-        //
-          This is a block comment
-          that might go on for multiple
-          lines. asd
-        //-
-          asd
-        -//
-          Another one
+p
+  :markdown-it(inline) **BOLD TEXT**
 
-        a(href = 'http://www.google.com') http://www.google.com
-        - if (youAreUsingJade)
-          p You are amazing
-        - else
-          p Get on it!
-          form
-            input(type = "text", name='user[name]', readonly = true, disabled)
-        div#single-quote.example
-          = 'this single quote should highlight as a string'
-          = 'this one' + "and this should too"
-          span= 'another' + "quote example"
-          span this one shouldn't higlight strings or... .other #things if else
-          | this one shouldn't highlight strings, and the same goes for .keywords #ok ?
-        div#paren.content.example(style = 'float: left;') Content .here #should be plain if for
-        +helpMe("if this is .bolded #that's bad, we want a string","a second arg or else");
-        //- +mixIn('do not highlight mixins in comment blocks')
-        div.examples#javascript
-          - var a = 1;
-          - var helperFunction = function (a) { return (a === 1 ? 'singular' : 'plural'); };
-          span= someArray.join(', ')
-          span= a.toString() + helperFunction(a)
-          span#id.class(style = 'margin-bottom: 0;')= "some_js_expression".split('_').join(' ')
-          include:markdown article.md
-          include test.md
+p.
+  In the midst of a large amount of plain
+  text, suddenly a wild #[:markdown-it(inline) *Markdown*]
+  appeared.
+
+//--------------------------------------------------
+// Nested Filters
+
+script
+  :cdata-js:babel(presets=['es2015'])
+    const myFunc = () => `This is ES2015 in a CD${'ATA'}`;
+
+//--------------------------------------------------
+// Custom Filters
+
+p
+  :my-own-filter(addStart addEnd)
+    Filter
+    Body
+
+//--------------------------------------------------
+// Includes
+//--------------------------------------------------
+
+//- index.pug
+doctype html
+html
+  include includes/head.pug
+  body
+    h1 My Site
+    p Welcome to my super lame site.
+    include includes/foot.pug
+
+//- includes/head.pug
+head
+  title My Site
+  script(src='/javascripts/jquery.js')
+  script(src='/javascripts/app.js')
+
+//- includes/foot.pug
+footer#footer
+  p Copyright (c) foobar
+
+//--------------------------------------------------
+// Including Plain Text
+//--------------------------------------------------
+
+doctype html
+html
+  head
+    style
+      include style.css
+  body
+    h1 My Site
+    p Welcome to my super lame site.
+    script
+      include script.js
+
+//--------------------------------------------------
+// Including Filtered Tex
+
+doctype html
+html
+  head
+    title An Article
+  body
+    include:markdown-it article.md
+
+//--------------------------------------------------
+// Template Inheritance
+//--------------------------------------------------
+
+html
+  head
+    title My Site - #{title}
+    block scripts
+      script(src='/jquery.js')
+  body
+    block content
+    block foot
       #footer
-        #copywrite-text= locals
+        p some footer content
+
+extends layout.pug
+
+block scripts
+  script(src='/jquery.js')
+  script(src='/pets.js')
+
+block content
+  h1= title
+  - var pets = ['cat', 'dog']
+  each petName in pets
+    include pet.pug
+
+//--------------------------------------------------
+// Block append / prepend
+
+extends layout.pug
+block append head
+  script(src='/vendor/three.js')
+  script(src='/game.js')
+
+extends layout
+append head
+  script(src='/vendor/three.js')
+  script(src='/game.js')
+
+//--------------------------------------------------
+// Interpolation
+//--------------------------------------------------
+
+- var title = "On Dogs: Man's Best Friend";
+- var author = "enlore";
+- var theGreat = "<span>escape!</span>";
+
+h1= title
+p Written with love by #{author}
+p This will be safe: #{theGreat}
+
+- var msg = "not my inside voice";
+p This is #{msg.toUpperCase()}
+
+p No escaping for #{'}'}!
+
+p Escaping works with \#{interpolation}
+p Interpolation works with #{'#{interpolation}'} too!
+
+//--------------------------------------------------
+// String Interpolation—Unescaped
+
+- var riskyBusiness = "<em>Some of the girls are wearing my mother's clothing.</em>";
+.quote
+  p Joel: !{riskyBusiness}
+
+//--------------------------------------------------
+// Tag Interpolation
+
+p.
+  This is a very long and boring paragraph that spans multiple lines.
+  Suddenly there is a #[strong strongly worded phrase] that cannot be
+  #[em ignored].
+
+//--------------------------------------------------
+// Whitespace Control
+
+p
+  | If I don't write the paragraph with tag interpolation, tags like
+  strong strong
+  | and
+  em em
+  | might produce unexpected results.
+p.
+  If I do, whitespace is #[strong respected] and #[em everybody] is happy.
+
+//--------------------------------------------------
+// Iteration
+//--------------------------------------------------
+
+ul
+  each val in [1, 2, 3, 4, 5]
+    li= val
+
+ul
+  each val, index in ['zero', 'one', 'two']
+    li= index + ': ' + val
+
+ul
+  each val, index in {1:'one',2:'two',3:'three'}
+    li= index + ': ' + val
+
+ul
+  each val in values.length ? values : ['There are no values']
+    li= val
+
+ul
+  each val in values
+    li= val
+  else
+    li There are no values
+
+ul
+  while n < 4
+    li= n++
+
+//--------------------------------------------------
+// Mixins
+//--------------------------------------------------
+
+//- Declaration
+mixin list
+  ul
+    li foo
+    li bar
+    li baz
+//- Use
++list
++list
+
+mixin pet(name)
+  li.pet= name
+ul
+  +pet('cat')
+  +pet('dog')
+  +pet('pig')
+
+//--------------------------------------------------
+// Mixin Blocks
 
 mixin article(title)
   .article
@@ -85,7 +508,72 @@ mixin article(title)
   p This is my
   p Amazing article
 
-h1= title
-  p Written with love by #{author}
-  p This will be safe: #{theGreat}
+//--------------------------------------------------
+// Mixin Attributes
+
+mixin link(href, name)
+  //- attributes == {class: "btn"}
+  a(class!=attributes.class href=href)= name
+
++link('/foo', 'foo')(class="btn")
+
+mixin link(href, name)
+  a(href=href)&attributes(attributes)= name
+
++link('/foo', 'foo')(class="btn")
+
+//--------------------------------------------------
+// Rest Arguments
+
+mixin list(id, ...items)
+  ul(id=id)
+    each item in items
+      li= item
+
++list('my-list', 1, 2, 3, 4)
+
+//--------------------------------------------------
+// Plain Text
+//--------------------------------------------------
+
+| Plain text can include <strong>html</strong>
+p
+  | It must always be on its own line
+
+//--------------------------------------------------
+// Inline in a Tag
+
+p Plain text can include <strong>html</strong>
+
+//--------------------------------------------------
+// Block in a Tag
+
+script.
+  if (usingPug)
+    console.log('you are awesome')
+  else
+    console.log('use pug')
+
+//--------------------------------------------------
+// Tags
+//--------------------------------------------------
+
+ul
+  li Item A
+  li Item B
+  li Item C
+
+img
+
+//--------------------------------------------------
+// Block Expansion
+
+a: img
+
+//--------------------------------------------------
+// Self Closing Tags
+// (when they are not selfclosed automatically)
+
+foo/
+foo(bar='baz')/
 
