@@ -78,14 +78,13 @@ line could be nested within this line.")
              "hr" "input" "link" "param" "source" "track" "wbr") t)))
 
 (defconst pug-control-re
-  (concat "^ *\\(- \\)?\\("
+  (concat "^ *\\(- \\)?\\<\\("
           (regexp-opt
-           '("if" "unless" "while" "until" "else" "for" "each" "in" "begin" 
+           '("if" "unless" "while" "until" "else" "for" "each" "in" "begin"
              "elsif" "when" "default" "case" "var'"
 
-             "extends" "block" "mixin"
-             ) 'words)
-          "\\)"))
+             "extends" "mixin" "append" "prepend"))
+          "\\|\\(block\\(?:\\s-+\\(append\\|prepend\\)\\)?\\)\\)\\>"))
 
 (defconst pug-embedded-re "^ *:[a-z0-9_-]+"
   "Regexp matching filter and embedded elements.")
