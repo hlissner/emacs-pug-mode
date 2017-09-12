@@ -270,7 +270,7 @@ declaration"
   (setq-local indent-line-function #'pug-indent-line)
   (setq-local indent-region-function #'pug-indent-region)
   (setq-local parse-sexp-lookup-properties t)
-  (setq-local electric-indent-chars '(?| ?+))
+  (setq-local electric-indent-chars '(?|))
   (setq-local comment-start "//")
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-end "")
