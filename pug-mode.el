@@ -141,10 +141,10 @@ line could be nested within this line.")
 
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
-     1 font-lock-string-face append)
+     1 font-lock-string-face t)
     ;; Double quoted string
     ("\\(\"[^\"]*\"\\)"
-     1 font-lock-string-face append)
+     1 font-lock-string-face t)
 
     ;; plain text block
     ;;(,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
