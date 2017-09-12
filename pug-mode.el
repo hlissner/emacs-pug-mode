@@ -177,10 +177,11 @@ line could be nested within this line.")
 
     ;; attributes
     ;; FIXME Doesn't take inline js or multiline attributes into account
-    ("[a-z0-9-_]("
-     ("\\(?:(\\|,?\\s-*\\)\\([[:alnum:]_-]+\\)\\(\\s-*=\\s-*\\('[^']+'\\|\"[^\"]+\"\\)\\)?"
-      (backward-char) (forward-char)
-      (1 font-lock-constant-face)))
+    ;; FIXME Possibly needs a real parser
+    ;; ("[a-z0-9-_]("
+    ;;  ("\\(?:(\\|,?\\s-*\\)\\([[:alnum:]_-]+\\)\\(\\s-*=\\s-*\\('[^']+'\\|\"[^\"]+\"\\)\\)?"
+    ;;   (backward-char) (forward-char)
+    ;;   (1 font-lock-constant-face)))
 
     ;; ==', =', -
     ("^\\s-*\\(!?==?'?\\|-\\)\\s-"
