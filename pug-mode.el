@@ -48,7 +48,7 @@ the backspaced line be re-indented along with the line itself."
   :type 'boolean
   :group 'pug)
 
-(defvar pug-indent-function 'pug-indent-p
+(defvar pug-indent-function #'pug-indent-p
   "This function should look at the current line and return true if the next
 line could be nested within this line.")
 
@@ -77,9 +77,6 @@ line could be nested within this line.")
            '("meta" "img" "area" "base" "br" "col" "command" "embed"
              "hr" "input" "link" "param" "source" "track" "wbr") t)))
 
-(defconst pug-keywords-re
-  (concat "^ *\\(?:- \\)?" (regexp-opt '("extends" "block") t)))
-
 (defconst pug-control-re
   (concat "^ *\\(- \\)?\\("
           (regexp-opt
@@ -98,7 +95,6 @@ line could be nested within this line.")
 
 (defconst pug-tag-declaration-char-re "[-a-zA-Z0-9_.#+]"
   "Regexp used to match a character in a tag declaration")
-
 
 ;; Helper for nested blocks (comment, embedded, text)
 (defun pug-nested-re (re)
@@ -143,7 +139,7 @@ line could be nested within this line.")
      (2 font-lock-keyword-face append))
     ;; "in" keyword in "each" statement
     ("each\\s-+\\w*\\s-+\\(in\\)" (1 font-lock-keyword-face))
-    
+
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
      1 font-lock-string-face append)
@@ -166,10 +162,11 @@ line could be nested within this line.")
     ;; Tag interpolation
     ("#\\[\\(\\sw+\\).*?\\]"
      (1 font-lock-function-name-face))
-    
+
     ;; doctype
     ("^\\(doctype .*$\\)"
      1 font-lock-comment-face)
+
     ;; include/extends statements
     ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
@@ -199,7 +196,7 @@ line could be nested within this line.")
       nil nil
       (1 font-lock-function-name-face)))))
 
-(cl-defun pug-extend-region ()
+(defun pug-extend-region ()
   "Extend the font-lock region to encompass embedded engines and comments."
   (let ((old-beg font-lock-beg)
         (old-end font-lock-end))
@@ -250,13 +247,13 @@ declaration"
 
 (defvar pug-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map "\177" 'pug-electric-backspace)
-    (define-key map "\C-?" 'pug-electric-backspace)
-    (define-key map "\C-c\C-f" 'pug-forward-sexp)
-    (define-key map "\C-c\C-b" 'pug-backward-sexp)
-    (define-key map "\C-c\C-u" 'pug-up-list)
-    (define-key map "\C-c\C-d" 'pug-down-list)
-    (define-key map "\C-c\C-k" 'pug-kill-line-and-indent)
+    (define-key map "\177" #'pug-electric-backspace)
+    (define-key map "\C-?" #'pug-electric-backspace)
+    (define-key map "\C-c\C-f" #'pug-forward-sexp)
+    (define-key map "\C-c\C-b" #'pug-backward-sexp)
+    (define-key map "\C-c\C-u" #'pug-up-list)
+    (define-key map "\C-c\C-d" #'pug-down-list)
+    (define-key map "\C-c\C-k" #'pug-kill-line-and-indent)
     map))
 
 ;; For compatibility with Emacs < 24, derive conditionally
@@ -269,10 +266,10 @@ declaration"
 
 \\{pug-mode-map}"
   (set-syntax-table pug-mode-syntax-table)
-  (add-to-list 'font-lock-extend-region-functions 'pug-extend-region)
+  (add-to-list 'font-lock-extend-region-functions #'pug-extend-region)
   (setq-local font-lock-multiline t)
-  (setq-local indent-line-function 'pug-indent-line)
-  (setq-local indent-region-function 'pug-indent-region)
+  (setq-local indent-line-function #'pug-indent-line)
+  (setq-local indent-region-function #'pug-indent-region)
   (setq-local parse-sexp-lookup-properties t)
   (setq-local electric-indent-chars '(?| ?+))
   (setq-local comment-start "//")
@@ -411,7 +408,7 @@ the sexp rather than the first non-whitespace character of the next line."
       (looking-at-p pug-embedded-re)
       (and (save-excursion
              (back-to-indentation)
-             (not (memq (face-at-point) '(font-lock-preprocessor-face))))
+             (not (eq (face-at-point) 'font-lock-preprocessor-face)))
            (not (looking-at-p pug-selfclosing-tags-re))
            (cl-loop for opener in `(,(concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
                                     "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
@@ -523,10 +520,11 @@ line."
 
 (defun pug-indent-string ()
   "Return the indentation string for `tab-width'."
-  (mapconcat 'identity (make-list tab-width " ") ""))
+  (mapconcat #'identity (make-list tab-width " ") ""))
 
 ;;;###autoload
 (defun pug-compile ()
+  "Compile the current pug file into html, using the pug cli."
   (interactive)
   (if (memq major-mode '(pug-mode jade-mode))
       (compile (format "pug %s" buffer-file-name))
