@@ -131,8 +131,8 @@ line could be nested within this line.")
     ("<!--.*-->"
      (0 font-lock-comment-face))
     ;; filters
-    (,(pug-nested-re "\\(:[a-z0-9_]+\\)")
-     (0 font-lock-preprocessor-face prepend))
+    (,(pug-nested-re "\\(:[a-z0-9:_-]+\\)\\(?:(\\|$\\|\n\\)")
+     (2 font-lock-preprocessor-face prepend))
     ;; block keywords
     (,pug-control-re
      (2 font-lock-keyword-face append))
