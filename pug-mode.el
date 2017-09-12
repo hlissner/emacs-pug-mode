@@ -145,6 +145,9 @@ line could be nested within this line.")
     ;; Double quoted string
     ("\\(\"[^\"]*\"\\)"
      1 font-lock-string-face t)
+    ;; Backtick string
+    ("=\\s-*\\(\`[^\`]*\`\\)"
+     1 font-lock-string-face t)
 
     ;; plain text block
     ;;(,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
