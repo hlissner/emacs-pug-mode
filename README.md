@@ -1,3 +1,4 @@
+![Release tag](https://img.shields.io/github/tag/hlissner/emacs-pug-mode.svg?label=release&style=flat-square)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![MELPA](http://melpa.org/packages/pug-mode-badge.svg)](http://melpa.org/#/pug-mode)
 [![MELPA Stable](http://stable.melpa.org/packages/pug-mode-badge.svg)](http://stable.melpa.org/#/pug-mode)
@@ -14,7 +15,9 @@
 
 `M-x package-install RET pug-mode`
 
-Then a `(require 'pug-mode)` will do. No additional setup required!
+```emacs-lisp
+(require 'pug-mode)
+```
 
 ## Why not use jade-mode?
 
@@ -34,18 +37,11 @@ developers!
 This plugin introduces a `pug-compile` function. You can call it
 directly (e.g. `M-x pug-compile`) or have it done automatically:
 
-`(add-hook 'after-save-hook 'pug-compile)`
+`(add-hook 'after-save-hook #'pug-compile)`
 
 It requires [pug-cli](https://www.npmjs.com/package/pug-cli).
 
-## TODO
-
-+ Define faces to improve customizability
-+ Use multiline-font-lock
-+ Optimize pug-indent-p and font-lock regexes
-+ Refactor out vestigial slim-mode code
-
 ## Contributions
 
-I'm inexperienced at writing major modes for Emacs. Any contributions are
-welcome and appreciated!
+I am no expert at writing major modes for Emacs and welcome contributions of any
+kind. Be they pull requests, bug reports or elisp tips!
