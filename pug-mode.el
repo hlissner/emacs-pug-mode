@@ -407,7 +407,7 @@ the sexp rather than the first non-whitespace character of the next line."
 (defun pug-indent-p ()
   "Returns true if the current line can have lines nested beneath it."
   ;; FIXME Optimize
-  (or (looking-at-p pug-comment-re)
+  (or (looking-at-p (concat pug-comment-re "$"))
       (looking-at-p pug-embedded-re)
       (and (save-excursion
              (back-to-indentation)
