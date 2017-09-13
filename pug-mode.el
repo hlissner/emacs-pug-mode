@@ -199,7 +199,7 @@ line could be nested within this line.")
       nil nil
       (1 font-lock-function-name-face)))))
 
-(defun pug-extend-region ()
+(cl-defun pug-extend-region ()
   "Extend the font-lock region to encompass embedded engines and comments."
   (let ((old-beg font-lock-beg)
         (old-end font-lock-end))
