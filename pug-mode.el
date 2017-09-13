@@ -526,12 +526,16 @@ line."
   (mapconcat #'identity (make-list tab-width " ") ""))
 
 ;;;###autoload
-(defun pug-compile ()
-  "Compile the current pug file into html, using the pug cli."
-  (interactive)
-  (if (memq major-mode '(pug-mode jade-mode))
-      (compile (format "pug %s" buffer-file-name))
-    (user-error "Not in a pug-mode buffer")))
+(defun pug-compile (&optional arg)
+  "Compile the current pug file into html, using pug-cli.
+
+If the universal argument is supplied, render pretty HTML (non-compressed)."
+  (interactive "P")
+  (unless (memq major-mode '(pug-mode jade-mode))
+    (user-error "Not in a pug-mode buffer"))
+  (unless (executable-find "pug")
+    (user-error "pug-cli couldn't be found"))
+  (compile (format "pug%s %s" (if arg " -P" "") buffer-file-name)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.\\(jade\\|pug\\)\\'" . pug-mode))
