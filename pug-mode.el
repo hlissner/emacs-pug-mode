@@ -97,12 +97,12 @@ line could be nested within this line.")
 
 ;; Helper for nested blocks (comment, embedded, text)
 (defun pug-nested-re (re)
-  (concat "^\\(\\s-*\\)" re "\\(\\(\n\\(?:\\1\\s-+[^\n]*\\)?\\)*\\)"))
+  (concat "^\\([ \t]*\\)" re "\\(\\(\n\\(?:\\1 +[^\n]*\\)?\\)*\\)"))
 
 ;; Font lock
 ;; TODO pug-mode specific faces?
 (defconst pug-font-lock-keywords
-  `(("^\\s-*[[:alnum:]_#.]"
+  `(("^[ \t]*[[:alnum:]_#.]"
      ;; id selectors
      ("\\(#[[:alnum:]_-]+\\)(?"
       (beginning-of-line) nil
@@ -112,20 +112,20 @@ line could be nested within this line.")
       (beginning-of-line) nil
       (1 font-lock-variable-name-face append))
      ;; Clear after : or selectors
-     ("[[:alnum:]_)]\\(?::\\s-+[^ ]+\\|\\s-+\\)\\([^\n]*\\)"
+     ("[[:alnum:]_)]\\(?::[ \t]+[^ ]+\\|[ \t]+\\)\\([^\n]*\\)"
       (beginning-of-line) nil
       (1 nil t)))
     ;; Tags
     (,pug-tags-re (1 font-lock-function-name-face))
     ;; +mixin invocation
-    ("^\\s-*\\+\\([a-z0-9_-]+\\)"
+    ("^[ \t]*\\+\\([a-z0-9_-]+\\)"
      0 font-lock-builtin-face)
 
     ;; comment block
     (,(pug-nested-re "-?//-?")
      (0 font-lock-comment-face))
     ;; comment line
-    ("^\\s-*\\(-//\\|//-?\\).*"
+    ("^[ \t]*\\(-//\\|//-?\\).*"
      (0 font-lock-comment-face prepend))
     ;; html comment block
     ("<!--.*-->"
@@ -137,7 +137,7 @@ line could be nested within this line.")
     (,pug-control-re
      (2 font-lock-keyword-face append))
     ;; "in" keyword in "each" statement
-    ("each\\s-+\\w*\\s-+\\(in\\)" (1 font-lock-keyword-face))
+    ("each[ \t]+\\w*[ \t]+\\(in\\)" (1 font-lock-keyword-face))
 
     ;; Single quote string
     ("[^a-z]\\('[^'\n]*'\\)"
@@ -146,7 +146,7 @@ line could be nested within this line.")
     ("\\(\"[^\"]*\"\\)"
      1 font-lock-string-face t)
     ;; Backtick string
-    ("=\\s-*\\(\`[^\`]*\`\\)"
+    ("=[ \t]*\\(\`[^\`]*\`\\)"
      1 font-lock-string-face t)
 
     ;; plain text block
@@ -154,7 +154,7 @@ line could be nested within this line.")
     ;; (3 font-lock-string-face t))
 
     ;; Plain text inline
-    ("^\\s-*\\(|\\).*$"
+    ("^[ \t]*\\(|\\).*$"
      (1 font-lock-function-name-face t))
 
     ;; String interpolation
@@ -170,7 +170,7 @@ line could be nested within this line.")
      1 font-lock-comment-face)
 
     ;; include/extends statements
-    ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|\\s-+\\)\\([^\n]+\\)\n"
+    ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|[ \t]+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))
@@ -184,7 +184,7 @@ line could be nested within this line.")
     ;;   (1 font-lock-constant-face)))
 
     ;; ==', =', -
-    ("^\\s-*\\(!?==?'?\\|-\\)\\s-"
+    ("^[ \t]*\\(!?==?'?\\|-\\)[ \t]"
      (1 font-lock-preprocessor-face)
      (,(regexp-opt
         '("if" "else" "elsif" "for" "in" "do" "unless"
@@ -193,7 +193,7 @@ line could be nested within this line.")
         'words) nil nil
         (0 font-lock-keyword-face)))
     ;; tag ==, tag =
-    ("^\\s-*[.#a-z0-9_-]\\([#a-z0-9_.-]\\|([^)]*)\\)+\\(!?=\\)\\s-"
+    ("^[ \t]*[.#a-z0-9_-]\\([#a-z0-9_.-]\\|([^)]*)\\)+\\(!?=\\)\\s-"
      (2 font-lock-preprocessor-face append)
      ("\\([[:alnum:]_]+\\)("
       nil nil
