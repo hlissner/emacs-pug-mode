@@ -97,7 +97,7 @@ line could be nested within this line.")
 
 ;; Helper for nested blocks (comment, embedded, text)
 (defun pug-nested-re (re)
-  (concat "^\\( *\\)" re "\\(\\(\n\\(?:\\1 +[^\n]*\\)?\\)*\\)"))
+  (concat "^\\(\\s-*\\)" re "\\(\\(\n\\(?:\\1\\s-+[^\n]*\\)?\\)*\\)"))
 
 ;; Font lock
 ;; TODO pug-mode specific faces?
@@ -118,14 +118,14 @@ line could be nested within this line.")
     ;; Tags
     (,pug-tags-re (1 font-lock-function-name-face))
     ;; +mixin invocation
-    ("^ *\\+\\([a-z0-9_-]+\\)"
+    ("^\\s-*\\+\\([a-z0-9_-]+\\)"
      0 font-lock-builtin-face)
 
     ;; comment block
     (,(pug-nested-re "-?//-?")
      (0 font-lock-comment-face))
     ;; comment line
-    ("^ *\\(-//\\|//-?\\).*"
+    ("^\\s-*\\(-//\\|//-?\\).*"
      (0 font-lock-comment-face prepend))
     ;; html comment block
     ("<!--.*-->"
