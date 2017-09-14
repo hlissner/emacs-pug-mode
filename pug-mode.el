@@ -121,12 +121,22 @@ line could be nested within this line.")
     ("^[ \t]*\\+\\([a-z0-9_-]+\\)"
      0 font-lock-builtin-face)
 
+    ;; Single quote string
+    ("[^a-z]\\('[^'\n]*'\\)"
+     1 font-lock-string-face prepend)
+    ;; Double quoted string
+    ("\\(\"[^\"]*\"\\)"
+     1 font-lock-string-face prepend)
+    ;; Backtick string
+    ("=[ \t]*\\(\`[^\`]*\`\\)"
+     1 font-lock-string-face prepend)
+
     ;; comment block
     (,(pug-nested-re "-?//-?")
-     (0 font-lock-comment-face))
+     (0 font-lock-comment-face t))
     ;; comment line
     ("^[ \t]*\\(-//\\|//-?\\).*"
-     (0 font-lock-comment-face prepend))
+     (0 font-lock-comment-face t))
     ;; html comment block
     ("<!--.*-->"
      (0 font-lock-comment-face))
@@ -138,16 +148,6 @@ line could be nested within this line.")
      (2 font-lock-keyword-face append))
     ;; "in" keyword in "each" statement
     ("each[ \t]+\\w*[ \t]+\\(in\\)" (1 font-lock-keyword-face))
-
-    ;; Single quote string
-    ("[^a-z]\\('[^'\n]*'\\)"
-     1 font-lock-string-face t)
-    ;; Double quoted string
-    ("\\(\"[^\"]*\"\\)"
-     1 font-lock-string-face t)
-    ;; Backtick string
-    ("=[ \t]*\\(\`[^\`]*\`\\)"
-     1 font-lock-string-face t)
 
     ;; plain text block
     ;;(,(pug-nested-re "[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\(\\.\\)")
