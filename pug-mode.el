@@ -243,7 +243,6 @@ declaration"
     (modify-syntax-entry ?# "." table)
     (modify-syntax-entry ?. "." table)
     (modify-syntax-entry ?: "." table)
-    (modify-syntax-entry ?# "." table)
     (modify-syntax-entry ?_ "w" table)
     table)
   "Syntax table in use in pug-mode buffers.")
