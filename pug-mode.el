@@ -137,8 +137,8 @@ line could be nested within this line.")
     ;; comment line
     ("^[ \t]*\\(-//\\|//-?\\).*"
      (0 font-lock-comment-face t))
-    ;; html comment block
-    ("<!--.*-->"
+    ;; html comment line
+    ("<![-[][^>]+>"
      (0 font-lock-comment-face))
     ;; filters
     (,(pug-nested-re "\\(:[a-z0-9:_-]+\\)\\(?:(\\|$\\|\n\\)")
