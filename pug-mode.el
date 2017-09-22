@@ -140,6 +140,11 @@ line could be nested within this line.")
     ;; html comment line
     ("<![-[][^>]+>"
      (0 font-lock-comment-face))
+    ;; html tags
+    ("\\(</?\\)\\([^> ]+\\)[^>]*\\(>\\)"
+     (1 font-lock-preprocessor-face)
+     (2 font-lock-type-face)
+     (3 font-lock-preprocessor-face))
     ;; filters
     (,(pug-nested-re "\\(:[a-z0-9:_-]+\\)\\(?:(\\|$\\|\n\\)")
      (2 font-lock-preprocessor-face prepend))
