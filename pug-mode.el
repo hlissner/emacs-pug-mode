@@ -258,12 +258,8 @@ declaration"
     (define-key map "\C-c\C-k" #'pug-kill-line-and-indent)
     map))
 
-;; For compatibility with Emacs < 24, derive conditionally
-(defalias 'pug-parent-mode
-  (if (fboundp 'prog-mode) 'prog-mode 'fundamental-mode))
-
 ;;;###autoload
-(define-derived-mode pug-mode pug-parent-mode "Pug"
+(define-derived-mode pug-mode prog-mode "Pug"
   "Major mode for editing Pug files.
 
 \\{pug-mode-map}"
