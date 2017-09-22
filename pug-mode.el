@@ -265,7 +265,6 @@ declaration"
 \\{pug-mode-map}"
   (set-syntax-table pug-mode-syntax-table)
   (add-to-list 'font-lock-extend-region-functions #'pug-extend-region)
-  (setq-local font-lock-multiline t)
   (setq-local indent-line-function #'pug-indent-line)
   (setq-local indent-region-function #'pug-indent-region)
   (setq-local parse-sexp-lookup-properties t)
@@ -274,8 +273,9 @@ declaration"
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-end "")
   (setq-local comment-end-skip "[ 	]*\\(\\s>\\|\n\\)")
-  (setq-local indent-tabs-mode nil)
-  (setq font-lock-defaults '((pug-font-lock-keywords) nil t)))
+  (setq-local comment-use-syntax nil)
+  (setq font-lock-multiline t
+        font-lock-defaults '((pug-font-lock-keywords) t t)))
 
 ;; Useful functions
 (defun pug-comment-block ()
