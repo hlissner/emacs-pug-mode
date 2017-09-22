@@ -269,7 +269,7 @@ declaration"
   (setq-local indent-region-function #'pug-indent-region)
   (setq-local parse-sexp-lookup-properties t)
   (setq-local electric-indent-chars '(?|))
-  (setq-local comment-start "//")
+  (setq-local comment-start "//-")
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-end "")
   (setq-local comment-end-skip "[ 	]*\\(\\s>\\|\n\\)")
@@ -278,13 +278,13 @@ declaration"
         font-lock-defaults '((pug-font-lock-keywords) t t)))
 
 ;; Useful functions
-(defun pug-comment-block ()
+(defun pug-comment-block (&optional arg)
   "Comment the current block of Pug code."
-  (interactive)
+  (interactive "P")
   (save-excursion
     (let ((indent (current-indentation)))
       (back-to-indentation)
-      (insert "//")
+      (insert "//" (if arg "" "-"))
       (newline)
       (indent-to indent)
       (beginning-of-line)
