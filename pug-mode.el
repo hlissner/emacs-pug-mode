@@ -283,30 +283,55 @@ declaration"
         font-lock-defaults '((pug-font-lock-keywords) t t)))
 
 ;; Useful functions
-(defun pug-comment-block (&optional arg)
-  "Comment the current block of Pug code."
-  (interactive "P")
-  (save-excursion
-    (let ((indent (current-indentation)))
-      (back-to-indentation)
-      (insert "//" (if arg "" "-"))
-      (newline)
-      (indent-to indent)
-      (beginning-of-line)
-      (pug-mark-sexp)
-      (pug-reindent-region-by tab-width))))
+(defun pug-comment-p (&optional pos)
+  "Return t if POS (or current point) is in a comment."
+  (and (memq 'font-lock-comment-face
+             (let ((faces (get-text-property (or pos (point)) 'face)))
+               (if (listp faces) faces (list faces))))
+       t))
 
-(defun pug-uncomment-block ()
-  "Uncomment the current block of Pug code."
-  (interactive)
+(defun pug-comment-block (&optional beg end arg)
+  "Comment the pug block at point or blocks in region in unbuffered comments. If
+ARG (the univeral argument) is non-nil, use buffered comments (//)."
+  (interactive "rP")
   (save-excursion
-    (beginning-of-line)
-    (while (not (looking-at pug-comment-re))
-      (pug-up-list)
-      (beginning-of-line))
-    (pug-mark-sexp)
-    (kill-line 1)
-    (pug-reindent-region-by (- tab-width))))
+    (cond ((and (region-active-p) beg end)
+           (goto-char beg)
+           (while (<= (point) end)
+             (pug-comment-block nil nil arg)
+             (pug-forward-sexp)))
+          ((not (pug-comment-p))
+           (let ((indent (current-indentation)))
+             (back-to-indentation)
+             (insert "//" (if arg "" "-"))
+             (newline)
+             (indent-to indent)
+             (beginning-of-line)
+             (let ((inhibit-message t))
+               (pug-mark-sexp))
+             (pug-reindent-region-by tab-width))))))
+
+(defun pug-uncomment-block (&optional beg end)
+  "Uncomment the pug block at point or blocks in region."
+  (interactive "r")
+  (cond ((and (region-active-p) beg end)
+         (goto-char end)
+         (while (>= (point) beg)
+           (pug-uncomment-block)
+           (pug-forward-through-whitespace 'backward)))
+        ((pug-comment-p)
+         (beginning-of-line)
+         (while (not (looking-at-p pug-comment-re))
+           (pug-up-list)
+           (beginning-of-line))
+         (when (looking-at-p pug-comment-re)
+           (cond ((looking-at-p "^\\(\\s-*\\)-?//-?\\s-*$")
+                  (pug-mark-sexp)
+                  (kill-line 1)
+                  (pug-reindent-region-by (- tab-width)))
+                 (t
+                  (uncomment-region (line-beginning-position)
+                                    (line-end-position))))))))
 
 ;; Navigation
 (defun pug-forward-through-whitespace (&optional backward)
