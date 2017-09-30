@@ -175,7 +175,7 @@ line could be nested within this line.")
      1 font-lock-type-face)
 
     ;; include/extends statements
-    ("\\<\\(include\\|extends\\)\\(:[^ \t]+\\|[ \t]+\\)\\([^\n]+\\)\n"
+    ("^\\s-*\\(include\\|extends\\)\\(:[^ \t]+\\|[ \t]+\\)\\([^\n]+\\)\n"
      (1 font-lock-keyword-face)
      (2 font-lock-preprocessor-face)
      (3 font-lock-string-face))
