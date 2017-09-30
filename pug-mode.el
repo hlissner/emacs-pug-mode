@@ -348,10 +348,7 @@ If `backward' is non-nil, move the point backward instead."
 (defun pug-at-indent-p ()
   "Returns whether or not the point is at the first non-whitespace character in
 a line or whitespace preceding that character."
-  (let ((opoint (point)))
-    (save-excursion
-      (back-to-indentation)
-      (>= (point) opoint))))
+  (>= (point) (save-excursion (back-to-indentation) (point))))
 
 (defun pug-forward-sexp (&optional arg)
   "Move forward across one nested expression. With `arg', do it that many times.
@@ -364,13 +361,13 @@ beneath it."
   (if (and (< arg 0) (not (pug-at-indent-p)))
       (back-to-indentation)
     (while (/= arg 0)
-      (let ((indent (current-indentation)))
-        (cl-loop do (pug-forward-through-whitespace (< arg 0))
-                 while (and (not (eobp))
-                            (not (bobp))
-                            (> (current-indentation) indent)))
-        (back-to-indentation)
-        (setq arg (+ arg (if (> arg 0) -1 1)))))))
+      (cl-loop with indent = (current-indentation)
+               do (pug-forward-through-whitespace (< arg 0))
+               while (and (not (eobp))
+                          (not (bobp))
+                          (> (current-indentation) indent)))
+      (back-to-indentation)
+      (setq arg (+ arg (if (> arg 0) -1 1))))))
 
 (defun pug-backward-sexp (&optional arg)
   "Move backward across one nested expression. With ARG, do it that many times.
@@ -386,11 +383,11 @@ beneath it."
   (interactive "p")
   (or arg (setq arg 1))
   (while (> arg 0)
-    (let ((indent (current-indentation)))
-      (cl-loop do (pug-forward-through-whitespace t)
-               while (and (not (bobp))
-                          (>= (current-indentation) indent)))
-      (setq arg (- arg 1))))
+    (cl-loop with indent = (current-indentation)
+             do (pug-forward-through-whitespace t)
+             while (and (not (bobp))
+                        (>= (current-indentation) indent)))
+    (setq arg (- arg 1)))
   (back-to-indentation))
 
 (defun pug-down-list (&optional arg)
@@ -409,7 +406,7 @@ beneath it."
 
 (defun pug-mark-sexp ()
   "Marks the next Pug block."
-  (let ((forward-sexp-function 'pug-forward-sexp))
+  (let ((forward-sexp-function #'pug-forward-sexp))
     (mark-sexp)))
 
 (defun pug-mark-sexp-but-not-next-line ()
@@ -418,32 +415,32 @@ the sexp rather than the first non-whitespace character of the next line."
   (pug-mark-sexp)
   (let ((pos-of-end-of-line (save-excursion
                               (goto-char (mark))
-                              (end-of-line)
-                              (point))))
+                              (line-end-position))))
     (when (/= pos-of-end-of-line (mark))
       (set-mark
        (save-excursion
          (goto-char (mark))
          (forward-line -1)
-         (end-of-line)
-         (point))))))
+         (line-end-position))))))
 
 ;; Indentation and electric keys
 (defun pug-indent-p ()
   "Returns true if the current line can have lines nested beneath it."
   ;; FIXME Optimize
-  (or (looking-at-p (concat pug-comment-re "$"))
-      (looking-at-p pug-embedded-re)
-      (and (save-excursion
-             (back-to-indentation)
-             (not (eq (face-at-point) 'font-lock-preprocessor-face)))
-           (not (looking-at-p pug-selfclosing-tags-re))
-           (cl-loop for opener in `(,(concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
-                                    "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
-                                    "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
-                                    ,pug-control-re)
-                    if (looking-at-p opener) return t
-                    finally return nil))))
+  ;; TODO Add parameter indentation
+  (when (or (looking-at-p (concat pug-comment-re "$"))
+            (looking-at-p pug-embedded-re)
+            (and (save-excursion
+                   (back-to-indentation)
+                   (not (eq (face-at-point) 'font-lock-preprocessor-face)))
+                 (not (looking-at-p pug-selfclosing-tags-re))
+                 (cl-loop for opener in `(,(concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
+                                          "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
+                                          "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
+                                          ,pug-control-re)
+                          if (looking-at-p opener) return t
+                          finally return nil)))
+    tab-width))
 
 (defun pug-compute-indentation ()
   "Calculate the maximum sensible indentation for the current line."
@@ -452,9 +449,9 @@ the sexp rather than the first non-whitespace character of the next line."
     (if (bobp) 0
       (pug-forward-through-whitespace t)
       (+ (current-indentation)
-         (if (funcall pug-indent-function)
-             tab-width
-           0)))))
+         ;; TODO Add parameter-wise indentation
+         (or (funcall pug-indent-function)
+             0)))))
 
 (defun pug-indent-region (start end)
   "Indent each nonblank line in the region. This is done by indenting the first
