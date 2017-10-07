@@ -520,6 +520,26 @@ will remove the spaces instead. Assumes all lines in the region have indentation
       (while (re-search-forward (concat "^" (make-string ci ? )) bound t)
         (replace-match (make-string (max 0 (+ ci n)) ? ) t t)))))
 
+(defun pug-electric-backtab (arg)
+  "Delete characters or back-dent the current line. If invoked following only
+whitespace on a line, will back-dent the line and all nested lines to the
+immediately previous multiple of `pug-tab-width' spaces.
+
+Set `pug-backspace-backdents-nesting' to nil to just back-dent the current
+line."
+  (interactive "*p")
+  (let ((ci (current-indentation))
+        (beg (line-beginning-position)))
+    (save-excursion
+      (beginning-of-line)
+      (if pug-backspace-backdents-nesting
+          (pug-mark-sexp-but-not-next-line)
+        (set-mark (save-excursion (end-of-line) (point))))
+      (indent-rigidly beg (region-end) (* (- arg) pug-tab-width))
+      ;; (pug-reindent-region-by (* (- arg) pug-tab-width))
+      (back-to-indentation)
+      (pop-mark))))
+
 (defun pug-electric-backspace (arg)
   "Delete characters or back-dent the current line. If invoked following only
 whitespace on a line, will back-dent the line and all nested lines to the
