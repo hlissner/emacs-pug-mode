@@ -1,7 +1,6 @@
 
 (require 'ert)
 (require 'pug-mode)
-(require 'subr-x)
 
 (setq-default
  pug-tab-width 2
@@ -25,12 +24,12 @@
          (pug-mode)
          (goto-char (point-min))
          ,@body))
-     (let ((result-text (string-trim (buffer-string)))
+     (let ((result-text (buffer-string))
            expected-text)
        (with-temp-buffer
          (cl-loop for line in ',expected
                   do (insert line "\n"))
-         (setq expected-text (string-trim (buffer-string)))
+         (setq expected-text (buffer-string))
          (should (equal expected-text result-text))))))
 
 (defmacro goto-char! (index)
