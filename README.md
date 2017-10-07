@@ -2,6 +2,7 @@
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![MELPA](http://melpa.org/packages/pug-mode-badge.svg)](http://melpa.org/#/pug-mode)
 [![MELPA Stable](http://stable.melpa.org/packages/pug-mode-badge.svg)](http://stable.melpa.org/#/pug-mode)
+[![Build Status](https://travis-ci.org/hlissner/emacs-pug-mode.png?branch=master&style=flat-square)](https://travis-ci.org/hlissner/emacs-pug-mode)
 
 # pug-mode
 
