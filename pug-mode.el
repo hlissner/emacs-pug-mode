@@ -219,10 +219,10 @@ blocks)."
         (old-end font-lock-end))
     (save-excursion
       (goto-char font-lock-beg)
-      (unless (looking-at "\\.$")
+      (unless (looking-at-p "\\.$")
         (beginning-of-line)
-        (unless (or (looking-at pug-embedded-re)
-                    (looking-at pug-comment-re))
+        (unless (or (looking-at-p pug-embedded-re)
+                    (looking-at-p pug-comment-re))
           (cl-return-from pug-extend-region)))
       (setq font-lock-beg (point))
       (pug-forward-sexp)
