@@ -11,7 +11,7 @@
 ;; Author: Henrik Lissner
 ;; Maintainer: Henrik Lissner <henrik@lissner.net>
 ;; Created: February 18, 2016
-;; Modified: October 08, 2017
+;; Modified: October 18, 2017
 ;; Version: 1.0.7
 ;; Homepage: https://github.com/hlissner/emacs-pug-mode
 ;; Keywords: markup, language, jade, pug
