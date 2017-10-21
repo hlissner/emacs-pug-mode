@@ -36,7 +36,7 @@ developers!
 ## Auto-compiling pug files
 
 This plugin introduces a `pug-compile` function. You can call it
-directly (e.g. `M-x pug-compile`) or have it done automatically for .pug files (as per [this Reddit post:](https://www.reddit.com/r/emacs/comments/741tx6/how_to_change_default_findfile_action_for/))
+directly (e.g. `M-x pug-compile`) or have it done automatically for .pug files:
 
 ```(defun pug-compile-saved-file()
   (when (and (stringp buffer-file-name)
