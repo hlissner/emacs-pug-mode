@@ -36,9 +36,13 @@ developers!
 ## Auto-compiling pug files
 
 This plugin introduces a `pug-compile` function. You can call it
-directly (e.g. `M-x pug-compile`) or have it done automatically:
+directly (e.g. `M-x pug-compile`) or have it done automatically for .pug files:
 
-`(add-hook 'after-save-hook #'pug-compile)`
+```(defun pug-compile-saved-file()
+  (when (and (stringp buffer-file-name)
+             (string-match "\\.pug\\'" buffer-file-name))
+     (pug-compile)))
+(add-hook 'after-save-hook 'pug-compile-saved-file)```
 
 It requires [pug-cli](https://www.npmjs.com/package/pug-cli).
 
