@@ -602,7 +602,7 @@ If the universal argument is supplied, render pretty HTML (non-compressed)."
   (compile (format "pug%s %s" (if arg " -P" "") buffer-file-name)))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.\\(jade\\|pug\\)\\'" . pug-mode))
+(add-to-list 'auto-mode-alist '("\\.\\(?:jade\\|pug\\)\\'" . pug-mode))
 
 (provide 'pug-mode)
 ;;; pug-mode.el ends here
