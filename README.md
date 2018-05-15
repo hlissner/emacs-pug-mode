@@ -6,7 +6,7 @@
 
 # pug-mode
 
-`pug-mode` offers Emacs support for [Pug](http://jade-lang.com/). Unlike
+`pug-mode` offers Emacs support for [Pug](https://pugjs.org/). Unlike
 `jade-mode`, it is based off of
 [slim-mode](https://github.com/slim-template/emacs-slim).
 
