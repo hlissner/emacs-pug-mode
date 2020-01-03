@@ -3,7 +3,7 @@
 ;; Copyright (c) 2007, 2008 Nathan Weizenbaum
 ;; Copyright (c) 2009-2013 Daniel Mendler
 ;; Copyright (c) 2012-2014 Bozhidar Batsov
-;; Copyright (c) 2016-2017 Henrik Lissner
+;; Copyright (c) 2016-2021 Henrik Lissner
 ;;
 ;; Author: Nathan Weizenbaum
 ;; Author: Daniel Mendler
