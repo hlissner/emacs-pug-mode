@@ -44,7 +44,6 @@
   (defvar font-lock-end)
   (require 'cl-lib))
 
-;; User definable variables
 (defgroup pug nil
   "Support for the Pug template language."
   :group 'languages
@@ -350,8 +349,7 @@ ARG (the univeral argument) is non-nil, use buffered comments (//)."
                   (pug-mark-sexp)
                   (kill-line 1)
                   (pug-reindent-region-by (- pug-tab-width)))
-                 (t
-                  (uncomment-region (line-beginning-position)
+                 ((uncomment-region (line-beginning-position)
                                     (line-end-position))))))))
 
 ;; Navigation
@@ -402,28 +400,29 @@ beneath it."
 (defun pug-up-list (&optional arg)
   "Move out of one level of nesting. With ARG, do this that many times."
   (interactive "p")
-  (or arg (setq arg 1))
-  (while (> arg 0)
-    (cl-loop with indent = (current-indentation)
-             do (pug-forward-through-whitespace t)
-             while (and (not (bobp))
-                        (>= (current-indentation) indent)))
-    (setq arg (- arg 1)))
-  (back-to-indentation))
+  (let ((arg (or arg 1)))
+    (while (> arg 0)
+      (let ((indent (current-indentation)))
+        (while (progn
+                 (pug-forward-through-whitespace (< arg 0))
+                 (and (not (bobp))
+                      (>= (current-indentation) indent)))))
+      (setq arg (- arg 1)))
+    (back-to-indentation)))
 
 (defun pug-down-list (&optional arg)
   "Move down one level of nesting. With ARG, do this that many times."
   (interactive "p")
-  (or arg (setq arg 1))
-  (while (> arg 0)
-    (let ((indent (current-indentation)))
-      (pug-forward-through-whitespace)
-      (when (<= (current-indentation) indent)
-        (pug-forward-through-whitespace t)
-        (back-to-indentation)
-        (error "Nothing is nested beneath this line"))
-      (setq arg (- arg 1))))
-  (back-to-indentation))
+  (let ((arg (or arg 1)))
+    (while (> arg 0)
+      (let ((indent (current-indentation)))
+        (pug-forward-through-whitespace)
+        (when (<= (current-indentation) indent)
+          (pug-forward-through-whitespace t)
+          (back-to-indentation)
+          (error "Nothing is nested beneath this line"))
+        (setq arg (- arg 1))))
+    (back-to-indentation)))
 
 (defun pug-mark-sexp ()
   "Marks the next Pug block."
@@ -435,34 +434,33 @@ beneath it."
   "Marks the next Pug block, but puts the mark at the end of the last line of
 the sexp rather than the first non-whitespace character of the next line."
   (pug-mark-sexp)
-  (let ((pos-of-end-of-line (save-excursion
-                              (goto-char (mark))
-                              (line-end-position))))
-    (when (/= pos-of-end-of-line (mark))
-      (set-mark
-       (save-excursion
-         (goto-char (mark))
-         (forward-line -1)
-         (line-end-position))))))
+  (and (/= (save-excursion
+             (goto-char (mark))
+             (line-end-position))
+           (mark))
+       (set-mark
+        (save-excursion
+          (goto-char (mark))
+          (forward-line -1)
+          (line-end-position)))))
 
 ;; Indentation and electric keys
 (defun pug-indent-p ()
   "Returns true if the current line can have lines nested beneath it."
   ;; FIXME Optimize
   ;; TODO Add parameter indentation
-  (when (or (looking-at-p (concat pug-comment-re "$"))
-            (looking-at-p pug-embedded-re)
-            (and (save-excursion
-                   (back-to-indentation)
-                   (not (eq (face-at-point) 'font-lock-preprocessor-face)))
-                 (not (looking-at-p pug-selfclosing-tags-re))
-                 (cl-loop for opener in `(,(concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
-                                          "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
-                                          "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
-                                          ,pug-control-re)
-                          if (looking-at-p opener) return t
-                          finally return nil)))
-    pug-tab-width))
+  (and (or (looking-at-p (concat pug-comment-re "$"))
+           (looking-at-p pug-embedded-re)
+           (and (save-excursion
+                  (back-to-indentation)
+                  (not (eq (face-at-point) 'font-lock-preprocessor-face)))
+                (not (looking-at-p pug-selfclosing-tags-re))
+                (cl-find-if #'looking-at-p
+                            (list (concat "\\(^ *[\\.#+]\\|" pug-tags-re "\\)[^ \t]*\\((.+)\\)?\n")
+                                  "^ *[\\.#+a-z][^ \t]*\\(?:(.+)\\)?\\.\n"
+                                  "^ *[-=].*do[ \t]*\\(|.*|[ \t]*\\)?$"
+                                  pug-control-re))))
+       pug-tab-width))
 
 (defun pug-compute-indentation ()
   "Calculate the maximum sensible indentation for the current line."
@@ -488,8 +486,10 @@ indentations."
     (goto-char start)
     (let (this-line-column current-column
           (next-line-column
-           (if (and (equal last-command this-command) (/= (current-indentation) 0))
-               (* (/ (- (current-indentation) 1) pug-tab-width) pug-tab-width)
+           (if (and (equal last-command this-command)
+                    (/= (current-indentation) 0))
+               (* (/ (- (current-indentation) 1) pug-tab-width)
+                  pug-tab-width)
              (pug-compute-indentation))))
       (while (< (point) end)
         (setq this-line-column next-line-column
@@ -569,7 +569,7 @@ line."
          (backward-delete-char-untabify arg))
 
         ((save-excursion (goto-char (line-beginning-position))
-                         (looking-at "^[ \t]+$"))
+                         (looking-at-p "^[ \t]+$"))
          (if indent-tabs-mode
              (backward-delete-char-untabify arg)
            (let ((movement (- pug-tab-width (% (current-column) pug-tab-width)))
@@ -577,8 +577,7 @@ line."
              (when (bolp) (setq movement 1))
              (delete-char (- movement)))))
 
-        (t
-         (pug-electric-backtab arg))))
+        ((pug-electric-backtab arg))))
 
 (defun pug-kill-line-and-indent ()
   "Kill the current line, and re-indent all lines nested beneath it."
@@ -587,10 +586,6 @@ line."
   (pug-mark-sexp-but-not-next-line)
   (kill-line 1)
   (pug-reindent-region-by (* -1 pug-tab-width)))
-
-(defun pug-indent-string ()
-  "Return the indentation string for `pug-tab-width'."
-  (mapconcat #'identity (make-list pug-tab-width " ") ""))
 
 ;;;###autoload
 (defun pug-compile (&optional arg)
