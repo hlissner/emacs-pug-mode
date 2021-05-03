@@ -66,6 +66,11 @@ the backspaced line be re-indented along with the line itself."
   :type 'integer
   :group 'pug)
 
+(defcustom pug-executable "pug"
+  "Executable to use when compiling pug templates."
+  :type 'string
+  :group 'pug)
+
 (defvar pug-indent-function #'pug-indent-p
   "This function should look at the current line and return true if the next
 line could be nested within this line.")
@@ -595,9 +600,12 @@ If the universal argument is supplied, render pretty HTML (non-compressed)."
   (interactive "P")
   (unless (memq major-mode '(pug-mode jade-mode))
     (user-error "Not in a pug-mode buffer"))
-  (unless (executable-find "pug")
+  (unless (executable-find pug-executable)
     (user-error "pug-cli couldn't be found"))
-  (compile (format "pug%s %s" (if arg " -P" "") buffer-file-name)))
+  (compile (format "%s%s %s"
+                   pug-executable
+                   (if arg " -P" "")
+                   buffer-file-name)))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist '("\\.\\(?:jade\\|pug\\)\\'" . pug-mode))
