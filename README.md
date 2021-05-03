@@ -1,3 +1,4 @@
+[![Made with Doom Emacs](https://img.shields.io/badge/Made_with-Doom_Emacs-blueviolet.svg?style=flat-square&logo=GNU%20Emacs&logoColor=white)](https://github.com/hlissner/doom-emacs)
 ![Release tag](https://img.shields.io/github/tag/hlissner/emacs-pug-mode.svg?label=release&style=flat-square)
 [![MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![MELPA](http://melpa.org/packages/pug-mode-badge.svg)](http://melpa.org/#/pug-mode)
