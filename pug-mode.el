@@ -9,7 +9,7 @@
 ;; Author: Daniel Mendler
 ;; Author: Bozhidar Batsov
 ;; Author: Henrik Lissner
-;; Maintainer: Henrik Lissner <henrik@lissner.net>
+;; Maintainer: Henrik Lissner <contact@henrik.io>
 ;; Created: February 18, 2016
 ;; Modified: May 02, 2021
 ;; Version: 1.0.8
